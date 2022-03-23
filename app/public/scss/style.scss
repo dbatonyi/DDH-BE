@@ -1,0 +1,11 @@
+* {
+    color: red;
+}
+
+body {
+    color: yellow;
+
+    > div {
+        color: blue;
+    }
+}

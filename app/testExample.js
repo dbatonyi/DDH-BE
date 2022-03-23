@@ -1,17 +1,19 @@
 const express = require('express');
 
+// Sequelize model require
 const { sequelize, User, Task, Knowledge } = require('./models');
 
 const app = express();
 app.use(express.json());
 
+
 // Register new user
 
 app.post('/register', async (req, res) => {
-  const { name, email, role } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
-    const user = await User.create({ name, email, role });
+    const user = await User.create({ name, email, password, role });
 
     return res.json(user);
   } catch (err) {

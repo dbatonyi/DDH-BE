@@ -12,12 +12,28 @@ module.exports = {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      name: {
+      firstname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      lastname: {
         type: DataTypes.STRING,
         allowNull: false,
       },
       email: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      lastLogin: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      status: {
+        type: DataTypes.ENUM('active', 'inactive'),
         allowNull: false,
       },
       role: {

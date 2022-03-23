@@ -12,17 +12,23 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(Task, { foreignKey: 'userId', as: 'tasks' })
     }
 
-    toJSON() {
-      return { ...this.get(), id: undefined }
-    }
   }
+  
   User.init(
     {
       uuid: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      name: {
+      firstname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: 'User must have a name' },
+          notEmpty: { msg: 'Name must not be empty' },
+        },
+      },
+      lastname: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -38,6 +44,21 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: { msg: 'email must not be empty' },
           isEmail: { msg: 'Must be a valid email address' },
         }
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: 'User must have a password' },
+          notEmpty: { msg: 'Password must not be empty' },
+        },
+      },
+      lastLogin: {
+        type: DataTypes.DATE
+      },
+      status: {
+          type: DataTypes.ENUM('active', 'inactive'),
+          defaultValue: 'active'
       },
       role: {
         type: DataTypes.STRING,
