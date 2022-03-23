@@ -5,6 +5,8 @@ var session    = require('express-session');
 var bodyParser = require('body-parser');
 var exphbs = require('express-handlebars');
 
+const path = require('path');
+
 //var env = require('dotenv').load();
 
 //Public folder
