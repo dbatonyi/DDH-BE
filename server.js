@@ -10,7 +10,7 @@ const path = require('path');
 //var env = require('dotenv').load();
 
 //Public folder
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(__dirname + '/public'));
 
 //For BodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -60,7 +60,7 @@ require('./app/config/passport/passport.js')(passport, models.User);
 app.listen(5000, function(err) {
  
     if (!err)
-        console.log("Site is live");
+        console.log("Site is live: http://localhost:5000");
     else console.log(err)
  
 });

@@ -3,21 +3,31 @@
  
 <head>
     <title>DDH SignUp</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
 </head>
  
 <body>
-    <form id="signup" name="signup" method="post" action="/signup">
-        <label for="email">Email Address</label>
-        <input class="text" name="email" type="email" />
-        <label for="firstname">Firstname</label>
-        <input name="firstname" type="text" />
-        <label for="lastname">Lastname</label>
-        <input name="lastname" type="text" />
-        <label for="password">Password</label>
-        <input name="password" type="password" />
-        <input class="btn" type="submit" value="Sign Up" />
-    </form>
- 
+    <div class="signup-background">
+        <div class="signup-container">
+            <div class="signup-container__title"><h1>Registration</h1></div>
+            <form class="signup-container__form" id="signup" name="signup" method="post" action="/signup">
+                <label for="email">Email Address</label>
+                <input class="text" name="email" type="email" />
+                <label for="firstname">Firstname</label>
+                <input name="firstname" type="text" />
+                <label for="lastname">Lastname</label>
+                <input name="lastname" type="text" />
+                <label for="password">Password</label>
+                <input name="password" type="password" />
+                <div class="signup-container__form--submit-btn">
+                    <input class="btn" type="submit" value="Sign Up" />
+                </div>
+                {{#if message}}
+                <div class="error">{{{message}}}</div>
+                {{/if}}
+            </form>
+        </div>
+    </div>
 </body>
  
 </html>

@@ -26,8 +26,10 @@ module.exports = function(passport, User) {
                 }
             }).then(function(user) {
                 if (user) {
+                    console.log("already taken")
+
                     return done(null, false, {
-                        message: 'That email is already taken'
+                        message: "already taken"
                     });
                 } else {
                     var userPassword = generateHash(password);

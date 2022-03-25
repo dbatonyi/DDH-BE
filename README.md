@@ -16,3 +16,8 @@
 <li>Create a form, where editors can create a project by selecting the appropriate parameters</li>
 <li>Display the completed project in meistertask via API</li>
 </ul>
+
+<ul>
+<li>Start server: npm run start</li>
+<li>Convert sccs to css: npm run build</li>
+</ul>
