@@ -13,6 +13,6 @@
 <li>Login/Register users | Authentication (DONE)</li>
 <li>User role system development (WIP)</li>
 <li>Interface for adding/view/edit/delete tasks and knowledge base</li>
-<li>Create a form, where editors can create a project by selecting the appropriate parameters<li>
+<li>Create a form, where editors can create a project by selecting the appropriate parameters</li>
 <li>Display the completed project in meistertask via API</li>
 </ul>
