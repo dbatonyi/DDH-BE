@@ -20,6 +20,9 @@ module.exports = function(passport, User) {
                 return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
             };
 
+            //Empty session message
+            req.session.messages = [];
+
             User.findOne({
                 where: {
                     email: email
@@ -68,6 +71,9 @@ module.exports = function(passport, User) {
             var isValidPassword = function(userpass, password) {
                 return bCrypt.compareSync(password, userpass);
             }
+
+            //Empty session message
+            req.session.messages = [];
         
             User.findOne({
                 where: {

@@ -2,14 +2,14 @@ var exports = module.exports = {}
  
 exports.signup = function(req, res) {
  
-    res.render('signup');
- 
+    res.render('signup', { errmessage: req.session.messages });
+    
 }
 
 exports.signin = function(req, res) {
  
-    res.render('signin');
- 
+    res.render('signin', { errmessage: req.session.messages });
+    
 }
 
 exports.dashboard = function(req, res) {

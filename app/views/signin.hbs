@@ -19,6 +19,9 @@
                     <input class="btn" type="submit" value="Sign In" />
                 </div>
             </form>
+            {{#if errmessage}}
+                <div class="error">{{{errmessage}}}</div>
+            {{/if}}
             <div class="login-container__sign-up"><p>New User? <a href="/signup">Create new account!</a></p></div>
         </div>
     </div>

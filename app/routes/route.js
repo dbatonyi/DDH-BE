@@ -8,6 +8,26 @@ module.exports = function(app, passport) {
 
         res.redirect('/login');
     }
+
+    function singupHandler(req, res, next) {
+        passport.authenticate('local-signup', {
+            successRedirect: '/login',
+        
+            failureRedirect: '/signup',
+            
+            failureMessage: true
+        })(req, res, next);  
+    }
+
+    function signinHandler(req, res, next) {
+        passport.authenticate('local-signin', {
+            successRedirect: '/dashboard',
+        
+            failureRedirect: '/login',
+            
+            failureMessage: true
+        })(req, res, next);
+    }
  
     app.get('/signup', controller.signup);
  
@@ -17,24 +37,8 @@ module.exports = function(app, passport) {
 
     app.get('/logout', controller.logout);
  
-    app.post('/signup', function(req, res, next ){
-        passport.authenticate('local-signup', function(err, user, info) {
-            
-          if (!user) { 
-                res.render('signup', {message: info.message});
-            }
-          if (user) {
-            res.redirect('/login');
-          }
+    app.post('/signup', singupHandler);
 
-        })(req, res, next);   
-    });
-
-    app.post('/login', passport.authenticate('local-signin', {
-            successRedirect: '/dashboard',
-        
-            failureRedirect: '/login'
-        }
-    ));
+    app.post('/login', signinHandler);
  
 }
