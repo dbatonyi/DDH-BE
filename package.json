@@ -1,9 +1,9 @@
 {
-  "name": "DDH project",
+  "name": "DDH-project",
   "version": "0.2.0",
   "scripts": {
     "start": "node server.js",
-    "build": "node-sass public/scss/style.scss -o public/css"
+    "build": "node-sass public/scss -o public/css"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
