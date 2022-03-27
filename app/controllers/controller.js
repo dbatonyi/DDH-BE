@@ -8,7 +8,32 @@ exports.signup = function(req, res) {
 
 exports.signin = function(req, res) {
  
-    res.render('signin', { errmessage: req.session.messages });
+    const sessionMessage = req.session.messages;
+    var emailError = false;
+    var passwordError = false;
+
+    if (sessionMessage) {
+        const isEmailError = sessionMessage[0].includes("email");
+        const isPasswordError = sessionMessage[0].includes("password");
+
+        if (isEmailError) {
+            var emailError = true;
+        } else {
+            var emailError = false;
+        }
+
+        if (isPasswordError) {
+            var passwordError = true;
+        } else {
+            var passwordError = false;
+        }
+    }
+
+    res.render('signin', {
+        errmessage: sessionMessage,
+        isEmailError: emailError,
+        isPasswordError: passwordError
+    });
     
 }
 

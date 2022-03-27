@@ -29,10 +29,9 @@ module.exports = function(passport, User) {
                 }
             }).then(function(user) {
                 if (user) {
-                    console.log("already taken")
 
                     return done(null, false, {
-                        message: "already taken"
+                        message: "Email already taken"
                     });
                 } else {
                     var userPassword = generateHash(password);
@@ -82,7 +81,7 @@ module.exports = function(passport, User) {
             }).then(function(user) {
                 if (!user) {
                     return done(null, false, {
-                        message: 'Email does not exist'
+                        message: 'Wrong email address.'
                     });
                 }
         

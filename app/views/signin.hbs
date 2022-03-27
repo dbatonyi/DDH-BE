@@ -13,16 +13,27 @@
             <div class="login-container__title"><h1>Login</h1></div>
             <form class="login-container__form" id="login" name="signin" method="post" action="login">
                 <label for="email">Email Address</label>
-                <input class="text" name="email" type="text" />
+                {{#if isEmailError }}
+                    <div class="errorinputdiv">
+                        <input class="text errmessage" name="email" type="email" />
+                        <div class="error">{{{errmessage}}}</div>
+                    </div>
+                {{else}}
+                    <input class="text" name="email" type="email" />
+                {{/if}}
                 <label for="password">Password</label>
-                <input name="password" type="password" />
+                {{#if isPasswordError }}
+                    <div class="errorinputdiv">
+                        <input class="errmessage" name="password" type="password" />
+                        <div class="error">{{{errmessage}}}</div>
+                    </div>   
+                {{else}}
+                    <input name="password" type="password" />
+                {{/if}}
                 <div class="login-container__form--submit-btn">
                     <input class="btn" type="submit" value="Sign In" />
                 </div>
             </form>
-            {{#if errmessage}}
-                <div class="error">{{{errmessage}}}</div>
-            {{/if}}
             <div class="login-container__sign-up"><p>New User? <a href="/signup">Create new account!</a></p></div>
         </div>
     </div>

@@ -13,7 +13,11 @@
             <div class="signup-container__title"><h1>Registration</h1></div>
             <form class="signup-container__form" id="signup" name="signup" method="post" action="/signup">
                 <label for="email">Email Address</label>
-                <input class="text" name="email" type="email" />
+                {{#if errmessage}}
+                    <input class="text errmessage" name="email" type="email" />
+                {{else}}
+                    <input class="text" name="email" type="email" />
+                {{/if}}
                 <label for="firstname">Firstname</label>
                 <input name="firstname" type="text" />
                 <label for="lastname">Lastname</label>
