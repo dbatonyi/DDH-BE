@@ -1,0 +1,15 @@
+//DASHBOARD
+
+.dashboard-container {
+    display: flex;
+
+    &__sidebar {
+        width: 15%;
+        background-color: #8cd3ff;
+        height: 100vh;
+    }
+
+    &__main {
+        width: 85%;
+    }
+}

@@ -1,8 +1,24 @@
 var exports = module.exports = {}
  
 exports.signup = function(req, res) {
+
+    const sessionMessage = req.session.messages;
+    var emailError = false;
+
+    if (sessionMessage) {
+        const isEmailError = sessionMessage[0].includes("Email");
+
+        if (isEmailError) {
+            var emailError = true;
+        } else {
+            var emailError = false;
+        }
+    }
  
-    res.render('signup', { errmessage: req.session.messages });
+    res.render('signup', {
+        errmessage: sessionMessage,
+        isEmailError: emailError
+    });
     
 }
 
@@ -43,6 +59,15 @@ exports.dashboard = function(req, res) {
     const fullName = req.user.firstname + " " + req.user.lastname;
  
     res.render('dashboard', {username: fullName});
+ 
+}
+
+exports.profile = function(req, res) {
+
+    //console.log(req.user);
+    const fullName = req.user.firstname + " " + req.user.lastname;
+ 
+    res.render('profile', {username: fullName});
  
 }
 

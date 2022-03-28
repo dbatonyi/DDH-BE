@@ -35,6 +35,8 @@ module.exports = function(app, passport) {
 
     app.get('/dashboard', isLoggedIn, controller.dashboard);
 
+    app.get('/profile', isLoggedIn, controller.profile);
+
     app.get('/logout', controller.logout);
  
     app.post('/signup', singupHandler);

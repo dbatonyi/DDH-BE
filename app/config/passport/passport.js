@@ -31,7 +31,7 @@ module.exports = function(passport, User) {
                 if (user) {
 
                     return done(null, false, {
-                        message: "Email already taken"
+                        message: "Email address already exists."
                     });
                 } else {
                     var userPassword = generateHash(password);

@@ -25,6 +25,18 @@
       padding: 10px;
       margin: 10px auto;
       text-align: center; }
+      .signup-container__form input.errmessage {
+        border: 1px solid #b53737; }
+        .signup-container__form input.errmessage::placeholder {
+          color: #b53737; }
+    .signup-container__form .errorinputdiv {
+      display: flex;
+      flex-wrap: wrap; }
+      .signup-container__form .errorinputdiv input {
+        width: 100%; }
+      .signup-container__form .errorinputdiv .error {
+        width: 100%;
+        padding: 10px 0 20px 0; }
     .signup-container__form--submit-btn {
       width: 100%; }
       .signup-container__form--submit-btn input {
