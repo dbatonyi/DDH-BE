@@ -6,12 +6,14 @@ exports.signup = function(req, res) {
     var emailError = false;
 
     if (sessionMessage) {
-        const isEmailError = sessionMessage[0].includes("Email");
+        if (sessionMessage.length !== 0) {
+            const isEmailError = sessionMessage[0].includes("Email");
 
-        if (isEmailError) {
-            var emailError = true;
-        } else {
-            var emailError = false;
+            if (isEmailError) {
+                var emailError = true;
+            } else {
+                var emailError = false;
+            }
         }
     }
  
@@ -29,19 +31,22 @@ exports.signin = function(req, res) {
     var passwordError = false;
 
     if (sessionMessage) {
-        const isEmailError = sessionMessage[0].includes("email");
-        const isPasswordError = sessionMessage[0].includes("password");
+        if (sessionMessage.length !== 0) {
 
-        if (isEmailError) {
-            var emailError = true;
-        } else {
-            var emailError = false;
-        }
+            const isEmailError = sessionMessage[0].includes("email");
+            const isPasswordError = sessionMessage[0].includes("password");
 
-        if (isPasswordError) {
-            var passwordError = true;
-        } else {
-            var passwordError = false;
+            if (isEmailError) {
+                var emailError = true;
+            } else {
+                var emailError = false;
+            }
+
+            if (isPasswordError) {
+                var passwordError = true;
+            } else {
+                var passwordError = false;
+            }
         }
     }
 

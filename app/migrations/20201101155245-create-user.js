@@ -28,7 +28,7 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      lastLogin: {
+      lastlogin: {
         type: DataTypes.DATE,
         allowNull: false,
       },
@@ -39,6 +39,10 @@ module.exports = {
       role: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      reghash: {
+        type: DataTypes.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

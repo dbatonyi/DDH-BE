@@ -1,5 +1,9 @@
-//load bcrypt
+//load packages
 var bCrypt = require('bcrypt-nodejs');
+var nodemailer = require('nodemailer');
+var hbs = require('nodemailer-express-handlebars');
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config.json')[env];
  
 module.exports = function(passport, User) {
 
@@ -14,11 +18,15 @@ module.exports = function(passport, User) {
             passReqToCallback: true // allows us to pass back the entire request to the callback
         },
  
-        function(req, email, password, done) {
+        function (req, email, password, done) {
  
             var generateHash = function(password) {
                 return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
             };
+
+            var generateRegHash = function (regHash) {
+                return bCrypt.hashSync(regHash, bCrypt.genSaltSync(8), null);
+            }
 
             //Empty session message
             req.session.messages = [];
@@ -35,15 +43,55 @@ module.exports = function(passport, User) {
                     });
                 } else {
                     var userPassword = generateHash(password);
+                    var regHash = generateRegHash(email+passport);
                     var data =
                         {
                             email: email,
                             password: userPassword,
                             firstname: req.body.firstname,
                             lastname: req.body.lastname,
-                            role: 'User'
+                            role: 'User',
+                            reghash: regHash
                         };
-                    User.create(data).then(function(newUser, created) {
+                    User.create(data).then(function (newUser, created) {
+
+                        var options = {
+                            viewEngine: {
+                            extname: '.hbs',
+                            layoutsDir: 'app/views/email/',
+                            defaultLayout : 'registration',
+                            partialsDir : 'app/views/partials/'
+                        },
+                        viewPath: 'app/views/email/',
+                        extName: '.hbs'
+                        };
+
+                        var transporter = nodemailer.createTransport({
+                            host: config.smtpemail,
+                            service: 'gmail',
+                            auth: {
+                                user: config.smtpemail,
+                                pass: config.smtppass
+                            },
+                            secure: true,
+                            logger: true,
+                            ignoreTLS: true
+                        });
+
+                        transporter.use('compile', hbs(options));
+                        transporter.sendMail({
+                            from: config.smtpemail,
+                            to: data.email,
+                            subject: 'DDH registration!',
+                            template: 'registration',
+                            context: {
+                                user : data.firstname + " " + data.lastname
+                            }
+                            }, function (error, response) {
+                                console.log(error)
+                                transporter.close();
+                        });
+
                         if (!newUser) {
                             return done(null, false);
                         }

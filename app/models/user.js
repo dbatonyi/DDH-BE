@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: { msg: 'Password must not be empty' },
         },
       },
-      lastLogin: {
+      lastlogin: {
         type: DataTypes.DATE
       },
       status: {
@@ -64,7 +64,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      
+      reghash: {
+        type: DataTypes.STRING,
+        allowNull: false
+      }
     },
     {
       sequelize,
