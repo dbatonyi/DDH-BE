@@ -33,6 +33,8 @@ module.exports = function(app, passport) {
  
     app.get('/login', controller.signin);
 
+    app.get('/reset-pass', controller.resetPass);
+
     app.get('/dashboard', isLoggedIn, controller.dashboard);
 
     app.get('/profile', isLoggedIn, controller.profile);
@@ -42,5 +44,6 @@ module.exports = function(app, passport) {
     app.post('/signup', singupHandler);
 
     app.post('/login', signinHandler);
- 
+
+    app.post('/reset-pass', controller.resetPassHandler);
 }

@@ -1,6 +1,11 @@
+var nodemailer = require('nodemailer');
+var hbs = require('nodemailer-express-handlebars');
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config.json')[env];
+
 var exports = module.exports = {}
  
-exports.signup = function(req, res) {
+exports.signup = function (req, res) {
 
     const sessionMessage = req.session.messages;
     var emailError = false;
@@ -27,6 +32,7 @@ exports.signup = function(req, res) {
 exports.signin = function(req, res) {
  
     const sessionMessage = req.session.messages;
+    console.log(sessionMessage)
     var emailError = false;
     var passwordError = false;
 
@@ -56,6 +62,89 @@ exports.signin = function(req, res) {
         isPasswordError: passwordError
     });
     
+}
+
+exports.resetPassHandler = function (req, res, done) {
+
+    // Sequelize model require
+    const { User } = require('../models');
+    
+    const userEmail = req.body.email;
+
+    //Empty session message
+    req.session.messages = [];
+
+    User.findOne({
+        where: {
+            email: userEmail
+        }
+    }).then(function(user) {
+        if (!user) {
+
+            return res.render('resetpass', {
+                resetmessage: "Wrong email address!",
+                isPasswordReset: true
+            });
+        } else {
+
+            const userinfo = user.get();
+            const userName = userinfo.firstname + " " + userinfo.lastname;
+            const reghash = userinfo.reghash;
+
+            var options = {
+                viewEngine: {
+                extname: '.hbs',
+                layoutsDir: 'app/views/email/',
+                defaultLayout : 'passreset',
+                partialsDir : 'app/views/partials/'
+                },
+                viewPath: 'app/views/email/',
+                extName: '.hbs'
+                };
+
+                var transporter = nodemailer.createTransport({
+                    host: config.smtpemail,
+                    service: 'gmail',
+                    auth: {
+                        user: config.smtpemail,
+                        pass: config.smtppass
+                    },
+                    secure: true,
+                    logger: true,
+                    ignoreTLS: true
+                });
+
+                transporter.use('compile', hbs(options));
+                transporter.sendMail({
+                    from: config.smtpemail,
+                    to: userEmail,
+                    subject: 'DDH Reset password!',
+                    template: 'passreset',
+                    context: {
+                        user: userName,
+                        reghash: reghash
+                    }
+                    }, function (error, response) {
+                        console.log(error)
+                        transporter.close();
+                });
+            
+            return res.render('resetpass', {
+                resetmessage: "Your password has been reseted!",
+                isPasswordReset: true
+            });
+        }
+    });
+ 
+}
+
+exports.resetPass = function (req, res) {
+    
+    const sessionMessage = req.session.messages;
+    console.log(sessionMessage)
+
+    res.render('resetpass');
+ 
 }
 
 exports.dashboard = function(req, res) {

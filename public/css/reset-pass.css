@@ -1,0 +1,48 @@
+.reset-pass-background {
+  height: 100vh;
+  background: #8cd3ff; }
+
+.reset-pass-container {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 600px;
+  top: 20%;
+  left: calc(50% - 320px);
+  padding: 40px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; }
+  .reset-pass-container__form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center; }
+    .reset-pass-container__form label {
+      width: 100%; }
+    .reset-pass-container__form input {
+      width: 50%;
+      padding: 10px;
+      margin: 10px auto;
+      text-align: center; }
+      .reset-pass-container__form input.errmessage {
+        border: 1px solid #b53737; }
+        .reset-pass-container__form input.errmessage::placeholder {
+          color: #b53737; }
+    .reset-pass-container__form .errorinputdiv {
+      display: flex;
+      flex-wrap: wrap; }
+      .reset-pass-container__form .errorinputdiv input {
+        width: 100%; }
+      .reset-pass-container__form .errorinputdiv .error {
+        width: 100%;
+        padding: 10px 0 20px 0; }
+    .reset-pass-container__form--submit-btn {
+      width: 100%; }
+      .reset-pass-container__form--submit-btn input {
+        max-width: fit-content;
+        padding: 5px 10px; }
+  .reset-pass-container__sigh-up p {
+    font-weight: bold; }
+  .reset-pass-container__sigh-up a {
+    color: steelblue; }
