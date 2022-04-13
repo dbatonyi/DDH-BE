@@ -67,6 +67,10 @@ module.exports = (sequelize, DataTypes) => {
       reghash: {
         type: DataTypes.STRING,
         allowNull: false
+      },
+      resetdate: {
+        allowNull: true,
+        type: DataTypes.DATE,
       }
     },
     {

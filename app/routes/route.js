@@ -40,6 +40,10 @@ module.exports = function(app, passport) {
     app.get('/profile', isLoggedIn, controller.profile);
 
     app.get('/logout', controller.logout);
+
+    app.get('/reset/:id', controller.newPassword);
+
+    app.post('/reset/:id', controller.newPasswordHandler);
  
     app.post('/signup', singupHandler);
 

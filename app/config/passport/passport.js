@@ -24,10 +24,6 @@ module.exports = function(passport, User) {
                 return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
             };
 
-            var generateRegHash = function (regHash) {
-                return bCrypt.hashSync(regHash, bCrypt.genSaltSync(8), null);
-            }
-
             //Empty session message
             req.session.messages = [];
 
@@ -43,7 +39,11 @@ module.exports = function(passport, User) {
                     });
                 } else {
                     var userPassword = generateHash(password);
-                    var regHash = generateRegHash(email+passport);
+                    var regHashRow = generateHash(email + passport);
+                    
+                    //Remove slashes
+                    var regHash = regHashRow.replace(/\/+$/, '');
+
                     var data =
                         {
                             email: email,
