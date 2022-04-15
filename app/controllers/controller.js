@@ -140,17 +140,13 @@ exports.resetPassHandler = async function (req, res, done) {
     //Empty session message
     req.session.messages = [];
 
-    const user = await User.findOne({
-        where: {
-            email: userEmail
-        }
-    })
-    if (!user) {
+    const user = await User.findOne({ where: { email: userEmail } });
 
-            return res.render('resetpass', {
-                resetmessage: "Wrong email address!",
-                isPasswordReset: true
-            });
+    if (!user) {
+        return res.render('resetpass', {
+            resetmessage: "Wrong email address!",
+            isPasswordReset: true
+        });
     } 
 
     setPassResetDate(user);
@@ -205,30 +201,24 @@ exports.newPasswordHandler = async function (req, res) {
     
 }
 
-exports.newPassword = function (req, res) {
+exports.newPassword = async function (req, res) {
 
     const { User } = require('../models');
     
     var regHash = req.params.id;
 
-    User.findOne({
-            where: {
-                reghash: regHash
-            }
-    }).then(function (user) {
-        const userInfo = user.get();
+    const user = await User.findOne({ where: { reghash: regHash } });
 
-        var date = new Date();
-        var fiveMin = 5 * 60 * 1000;
+    const userInfo = user.get();
+
+    var date = new Date();
+    var fiveMin = 5 * 60 * 1000;
         
-        if((date - userInfo.resetdate) < fiveMin) {
-
-            res.render('reset', {reghash: regHash});
-        } else {
-            res.redirect('/');
-        }
-   
-    });
+    if((date - userInfo.resetdate) < fiveMin) {
+        res.render('reset', {reghash: regHash});
+    } else {
+        res.redirect('/');
+    }
  
 }
 
