@@ -64,40 +64,25 @@ exports.signin = function(req, res) {
     
 }
 
-exports.resetPassHandler = function (req, res, done) {
+exports.resetPassHandler = async function (req, res, done) {
 
     // Sequelize model require
     const { User } = require('../models');
     
     const userEmail = req.body.email;
 
-    //Empty session message
-    req.session.messages = [];
+    function setPassResetDate(user) {
+        const userInfo = user.get();
 
-    User.findOne({
-        where: {
-            email: userEmail
-        }
-    }).then(function(user) {
-        if (!user) {
-
-            return res.render('resetpass', {
-                resetmessage: "Wrong email address!",
-                isPasswordReset: true
-            });
-        } else {
-
-            const userinfo = user.get();
-
-            var date = new Date();
-            var twoMin = 2 * 60 * 1000;
+        var date = new Date();
+        var twoMin = 2 * 60 * 1000;
         
-            if((date - userinfo.resetdate) > twoMin) {
+        if((date - userInfo.resetdate) > twoMin) {
 
-                User.update({resetdate: new Date()}, { where: {email: userEmail}}).then(function (newUser, created) {
+            User.update({resetdate: new Date()}, { where: {email: userEmail}}).then(function (newUser, created) {
 
-                const userName = userinfo.firstname + " " + userinfo.lastname;
-                const reghash = userinfo.reghash;
+                const userName = userInfo.firstname + " " + userInfo.lastname;
+                const reghash = userInfo.reghash;
 
                 var options = {
                     viewEngine: {
@@ -143,17 +128,32 @@ exports.resetPassHandler = function (req, res, done) {
                     });
 
                 });
-
-            } else {
-                return res.render('resetpass', {
-                    resetmessage: "Your password already reseted, try again later!",
-                    isPasswordReset: true
-                });
-            }
-
+        } else {
+            return res.render('resetpass', {
+                resetmessage: "Your password already reseted, try again later!",
+                isPasswordReset: true
+            });
         }
-    });
- 
+
+    }
+
+    //Empty session message
+    req.session.messages = [];
+
+    const user = await User.findOne({
+        where: {
+            email: userEmail
+        }
+    })
+    if (!user) {
+
+            return res.render('resetpass', {
+                resetmessage: "Wrong email address!",
+                isPasswordReset: true
+            });
+    } 
+
+    setPassResetDate(user);
 }
 
 exports.resetPass = function (req, res) {
@@ -164,7 +164,7 @@ exports.resetPass = function (req, res) {
  
 }
 
-exports.newPasswordHandler = function (req, res) {
+exports.newPasswordHandler = async function (req, res) {
     
     const { User } = require('../models');
 
@@ -176,24 +176,25 @@ exports.newPasswordHandler = function (req, res) {
 
     const newPassword = req.body.password;
     const reNewPassword = req.body.repassword;
+    const cryptedPassword = generateHash(newPassword);
 
     if (newPassword === reNewPassword) {
 
-         User.findOne({
-            where: {
-                reghash: regHash
-            }
-         }).then(function (user) {
-            
-            const cryptedPassword = generateHash(newPassword);
-        
+        const user = await User.findOne({ where: { reghash: regHash } });
+        if (user) {
             User.update({password: cryptedPassword}, { where: {reghash: regHash}}).then(function (newUser, created) {
 
                 res.redirect('/');
 
             });
+        } else {
+            res.render('reset', {
+                reghash: regHash,
+                isPasswordReset: true,
+                resetmessage: "Something went wrong!"
+            });
+        }     
    
-        });
     } else {
         res.render('reset', {
             reghash: regHash,
@@ -215,12 +216,12 @@ exports.newPassword = function (req, res) {
                 reghash: regHash
             }
     }).then(function (user) {
-        const userinfo = user.get();
+        const userInfo = user.get();
 
         var date = new Date();
-        var FIVE_MIN = 5 * 60 * 1000;
+        var fiveMin = 5 * 60 * 1000;
         
-        if((date - userinfo.resetdate) < FIVE_MIN) {
+        if((date - userInfo.resetdate) < fiveMin) {
 
             res.render('reset', {reghash: regHash});
         } else {

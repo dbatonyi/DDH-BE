@@ -18,42 +18,10 @@ module.exports = function(passport, User) {
             passReqToCallback: true // allows us to pass back the entire request to the callback
         },
  
-        function (req, email, password, done) {
- 
-            var generateHash = function(password) {
-                return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
-            };
+        async function (req, email, password, done) {
 
-            //Empty session message
-            req.session.messages = [];
-
-            User.findOne({
-                where: {
-                    email: email
-                }
-            }).then(function(user) {
-                if (user) {
-
-                    return done(null, false, {
-                        message: "Email address already exists."
-                    });
-                } else {
-                    var userPassword = generateHash(password);
-                    var regHashRow = generateHash(email + passport);
-                    
-                    //Remove slashes
-                    var regHash = regHashRow.replace(/\/+$/, '');
-
-                    var data =
-                        {
-                            email: email,
-                            password: userPassword,
-                            firstname: req.body.firstname,
-                            lastname: req.body.lastname,
-                            role: 'User',
-                            reghash: regHash
-                        };
-                    User.create(data).then(function (newUser, created) {
+            function createNewUser(data) {
+                User.create(data).then(function (newUser, created) {
 
                         var options = {
                             viewEngine: {
@@ -99,8 +67,40 @@ module.exports = function(passport, User) {
                             return done(null, newUser);
                         }
                     });
-                }
-            });
+            }
+
+            var generateHash = function(password) {
+                return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+            };
+
+            //Empty session message
+            req.session.messages = [];
+
+            const user = await User.findOne({ where: { email: email } })
+            
+            if (user) {
+                return done(null, false, {
+                    message: "Email address already exists."
+                });
+            }
+            
+            var userPassword = generateHash(password);
+            var regHashRow = generateHash(email + passport);
+                    
+            //Remove slashes
+            var regHash = regHashRow.replace(/\/+$/, '');
+
+            var data =
+                {
+                    email: email,
+                    password: userPassword,
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    role: 'User',
+                    reghash: regHash
+                };
+                
+            createNewUser(data);
         }
     ));
 
@@ -113,7 +113,7 @@ module.exports = function(passport, User) {
             passReqToCallback: true // allows us to pass back the entire request to the callback
         },
     
-        function(req, email, password, done) {
+        async function(req, email, password, done) {
         
             var isValidPassword = function(userpass, password) {
                 return bCrypt.compareSync(password, userpass);
@@ -122,34 +122,23 @@ module.exports = function(passport, User) {
             //Empty session message
             req.session.messages = [];
         
-            User.findOne({
-                where: {
-                    email: email
-                }
-            }).then(function(user) {
-                if (!user) {
-                    return done(null, false, {
-                        message: 'Wrong email address.'
-                    });
-                }
-        
-                if (!isValidPassword(user.password, password)) {
-                    return done(null, false, {
-                        message: 'Incorrect password.'
-                    });
-                }
+            const user = await User.findOne({ where: { email: email } })
             
-                var userinfo = user.get();
-                return done(null, userinfo);
-            
-            }).catch(function(err) {
-            
-                console.log("Error:", err);
-            
+            if (!user) {
                 return done(null, false, {
-                    message: 'Something went wrong with your Signin'
+                    message: 'Wrong email address.'
                 });
-            });
+            }
+        
+            if (!isValidPassword(user.password, password)) {
+                return done(null, false, {
+                    message: 'Incorrect password.'
+                });
+            }
+            
+            var userInfo = user.get();
+            return done(null, userInfo);
+            
         }
     ));
 
