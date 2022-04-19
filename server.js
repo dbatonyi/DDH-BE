@@ -42,13 +42,9 @@ models.sequelize.sync().then(function() {
 });
 
 //For Handlebars
-app.set('views', './app/views')
-app.engine('hbs', exphbs.engine({
-    extname: '.hbs',
-    defaultLayout: false,
-    layoutsDir: "views/"
-}));
-app.set('view engine', '.hbs');
+app.set('views', './app/views');
+app.set('view engine', 'jsx');
+app.engine('jsx', require('express-react-views').createEngine());
 
 //Routes
 var route = require('./app/routes/route.js')(app,passport);

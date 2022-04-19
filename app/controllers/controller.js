@@ -24,6 +24,7 @@ exports.signup = function (req, res) {
     }
  
     res.render('signup', {
+        title: "DDH Signup",
         errmessage: sessionMessage,
         isEmailError: emailError
     });
@@ -57,6 +58,7 @@ exports.signin = function(req, res) {
     }
 
     res.render('signin', {
+        title: "DDH Sign-in",
         errmessage: sessionMessage,
         isEmailError: emailError,
         isPasswordError: passwordError
@@ -156,7 +158,7 @@ exports.resetPass = function (req, res) {
     
     const sessionMessage = req.session.messages;
 
-    res.render('resetpass');
+    res.render('resetpass', {title: "DDH Password Reset"});
  
 }
 
@@ -185,6 +187,7 @@ exports.newPasswordHandler = async function (req, res) {
             });
         } else {
             res.render('reset', {
+                title: "DDH Password Reset",
                 reghash: regHash,
                 isPasswordReset: true,
                 resetmessage: "Something went wrong!"
@@ -193,6 +196,7 @@ exports.newPasswordHandler = async function (req, res) {
    
     } else {
         res.render('reset', {
+            title: "DDH Password Reset",
             reghash: regHash,
             isPasswordReset: true,
             resetmessage: "Password must match!"
@@ -215,7 +219,10 @@ exports.newPassword = async function (req, res) {
     var fiveMin = 5 * 60 * 1000;
         
     if((date - userInfo.resetdate) < fiveMin) {
-        res.render('reset', {reghash: regHash});
+        res.render('reset', {
+            title: "DDH Password Reset",
+            reghash: regHash
+        });
     } else {
         res.redirect('/');
     }
@@ -227,7 +234,10 @@ exports.dashboard = function(req, res) {
     //console.log(req.user);
     const fullName = req.user.firstname + " " + req.user.lastname;
  
-    res.render('dashboard', {username: fullName});
+    res.render('dashboard', {
+        title: "DDH Dashboard",
+        username: fullName
+    });
  
 }
 
@@ -236,7 +246,10 @@ exports.profile = function(req, res) {
     //console.log(req.user);
     const fullName = req.user.firstname + " " + req.user.lastname;
  
-    res.render('profile', {username: fullName});
+    res.render('profile', {
+        title: "DDH User Profile",
+        username: fullName
+    });
  
 }
 
