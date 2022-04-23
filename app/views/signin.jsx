@@ -12,7 +12,7 @@ function signIn(props) {
                     {props.isEmailError ?
                         <div className="errorinputdiv">
                             <input className="text errmessage" name="email" type="email" />
-                            <div className="error">{props.errmessage}</div>
+                            <div className="error">{props.isEmailError}</div>
                         </div>
                         :
                         <input className="text" name="email" type="email" />   
@@ -21,7 +21,7 @@ function signIn(props) {
                     {props.isPasswordError ?
                         <div className="errorinputdiv">
                             <input className="errmessage" name="password" type="password" />
-                            <div className="error">{props.errmessage}</div>
+                            <div className="error">{props.isPasswordError}</div>
                         </div>
                         :
                         <input name="password" type="password" />
@@ -30,8 +30,18 @@ function signIn(props) {
                     <input className="btn" type="submit" value="Sign In" />
                 </div>
             </form>
-            <div className="login-container__sign-up"><p>New User? <a href="/signup">Create new account!</a></p></div>
-            <div className="login-container__reset-pass"><a href="/reset-pass">Reset password!</a></div>
+                <div className="login-container__sign-up"><p>New User? <a href="/signup">Create new account!</a></p></div>
+                <div className="login-container__reset-pass"><a href="/reset-pass">Reset password!</a></div>
+                    {props.errMessage ?
+                        <div className="error">{props.errMessage}</div>
+                    :
+                        <></>
+                    }
+                    {props.successMessage ?
+                        <div className="success">{props.successMessage}</div>
+                    :
+                        <></>
+                    }
             </div>
         </div>
     </MainLayout>

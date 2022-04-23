@@ -12,7 +12,7 @@ function signUp(props) {
                         {props.isEmailError ?
                             <div className="errorinputdiv">
                                 <input className="text errmessage" name="email" type="email" />
-                                <div className="error">{props.errmessage}</div>
+                                <div className="error">{props.isEmailError}</div>
                             </div>
                             :    
                             <input className="text" name="email" type="email" />
@@ -22,7 +22,22 @@ function signUp(props) {
                     <label htmlFor="lastname">Lastname</label>
                     <input name="lastname" type="text" />
                     <label htmlFor="password">Password</label>
-                    <input name="password" type="password" />
+                    {props.isPasswordError ?
+                        <div className="errorinputdiv">
+                            <input className="errmessage" name="password" type="password" />
+                            <div className="error">{props.isPasswordError}</div>
+                        </div>
+                        :    
+                        <input name="password" type="password" />
+                    }
+                    <label htmlFor="repassword">Re-Password</label>
+                    {props.isPasswordError ?
+                        <div className="errorinputdiv">
+                            <input className="errmessage" name="repassword" type="password" />
+                        </div>
+                        :    
+                        <input name="repassword" type="password" />
+                    }
                     <div className="signup-container__form--submit-btn">
                         <input className="btn" type="submit" value="Sign Up" />
                     </div>

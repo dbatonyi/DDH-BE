@@ -1,13 +1,13 @@
 //load packages
-var bCrypt = require('bcrypt-nodejs');
-var nodemailer = require('nodemailer');
-var hbs = require('nodemailer-express-handlebars');
+const bCrypt = require('bcrypt-nodejs');
+const nodemailer = require('nodemailer');
+const hbs = require('nodemailer-express-handlebars');
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config.json')[env];
  
 module.exports = function(passport, User) {
 
-    var LocalStrategy = require('passport-local').Strategy;
+    const LocalStrategy = require('passport-local').Strategy;
  
     //REGISTER
     passport.use('local-signup', new LocalStrategy(
@@ -23,7 +23,7 @@ module.exports = function(passport, User) {
             function createNewUser(data) {
                 User.create(data).then(function (newUser, created) {
 
-                        var options = {
+                        const options = {
                             viewEngine: {
                             extname: '.hbs',
                             layoutsDir: 'app/views/email/',
@@ -34,7 +34,7 @@ module.exports = function(passport, User) {
                         extName: '.hbs'
                         };
 
-                        var transporter = nodemailer.createTransport({
+                        const transporter = nodemailer.createTransport({
                             host: config.smtpemail,
                             service: 'gmail',
                             auth: {
@@ -64,12 +64,13 @@ module.exports = function(passport, User) {
                             return done(null, false);
                         }
                         if (newUser) {
+                            req.flash('successMessage', 'Successful registration!');
                             return done(null, newUser);
                         }
                     });
             }
 
-            var generateHash = function(password) {
+            const generateHash = function(password) {
                 return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
             };
 
@@ -79,18 +80,17 @@ module.exports = function(passport, User) {
             const user = await User.findOne({ where: { email: email } })
             
             if (user) {
-                return done(null, false, {
-                    message: "Email address already exists."
-                });
+                req.flash('errorMessageEmail', 'Email address already exists.');
+                return done(null, false);
             }
             
-            var userPassword = generateHash(password);
-            var regHashRow = generateHash(email + passport);
+            const userPassword = generateHash(password);
+            const regHashRow = generateHash(email + passport);
                     
             //Remove slashes
-            var regHash = regHashRow.replace(/\/+$/, '');
+            const regHash = regHashRow.replace(/\/+$/, '');
 
-            var data =
+            const data =
                 {
                     email: email,
                     password: userPassword,
@@ -99,8 +99,14 @@ module.exports = function(passport, User) {
                     role: 'User',
                     reghash: regHash
                 };
-                
-            createNewUser(data);
+            
+            if (req.body.password === req.body.repassword) {
+                createNewUser(data);
+            } else {
+                req.flash('errorMessagePass', 'Password not match!');
+                return done(null, false);
+            }
+            
         }
     ));
 
@@ -115,7 +121,7 @@ module.exports = function(passport, User) {
     
         async function(req, email, password, done) {
         
-            var isValidPassword = function(userpass, password) {
+            const isValidPassword = function(userpass, password) {
                 return bCrypt.compareSync(password, userpass);
             }
 
@@ -125,18 +131,16 @@ module.exports = function(passport, User) {
             const user = await User.findOne({ where: { email: email } })
             
             if (!user) {
-                return done(null, false, {
-                    message: 'Wrong email address.'
-                });
+                req.flash('errorMessageEmail', 'Wrong email address.');
+                return done(null, false);
             }
         
             if (!isValidPassword(user.password, password)) {
-                return done(null, false, {
-                    message: 'Incorrect password.'
-                });
+                req.flash('errorMessagePass', 'Incorrect password.');
+                return done(null, false);
             }
             
-            var userInfo = user.get();
+            const userInfo = user.get();
             return done(null, userInfo);
             
         }

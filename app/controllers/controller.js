@@ -1,6 +1,6 @@
-var bCrypt = require('bcrypt-nodejs');
-var nodemailer = require('nodemailer');
-var hbs = require('nodemailer-express-handlebars');
+const bCrypt = require('bcrypt-nodejs');
+const nodemailer = require('nodemailer');
+const hbs = require('nodemailer-express-handlebars');
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.json')[env];
 
@@ -8,60 +8,30 @@ var exports = module.exports = {}
  
 exports.signup = function (req, res) {
 
-    const sessionMessage = req.session.messages;
-    var emailError = false;
-
-    if (sessionMessage) {
-        if (sessionMessage.length !== 0) {
-            const isEmailError = sessionMessage[0].includes("Email");
-
-            if (isEmailError) {
-                var emailError = true;
-            } else {
-                var emailError = false;
-            }
-        }
-    }
+    const errorMessageEmail = req.flash("errorMessageEmail");
+    const errorMessagePass = req.flash("errorMessagePass");
  
     res.render('signup', {
         title: "DDH Signup",
-        errmessage: sessionMessage,
-        isEmailError: emailError
+        isEmailError: errorMessageEmail[0],
+        isPasswordError: errorMessagePass[0]
     });
     
 }
 
 exports.signin = function(req, res) {
  
-    const sessionMessage = req.session.messages;
-    var emailError = false;
-    var passwordError = false;
-
-    if (sessionMessage) {
-        if (sessionMessage.length !== 0) {
-
-            const isEmailError = sessionMessage[0].includes("email");
-            const isPasswordError = sessionMessage[0].includes("password");
-
-            if (isEmailError) {
-                var emailError = true;
-            } else {
-                var emailError = false;
-            }
-
-            if (isPasswordError) {
-                var passwordError = true;
-            } else {
-                var passwordError = false;
-            }
-        }
-    }
+    const successMessage = req.flash('successMessage');
+    const errorMessage = req.flash('errorMessage');
+    const errorMessageEmail = req.flash("errorMessageEmail");
+    const errorMessagePass = req.flash("errorMessagePass");
 
     res.render('signin', {
         title: "DDH Sign-in",
-        errmessage: sessionMessage,
-        isEmailError: emailError,
-        isPasswordError: passwordError
+        successMessage: successMessage[0],
+        errMessage: errorMessage[0],
+        isEmailError: errorMessageEmail[0],
+        isPasswordError: errorMessagePass[0]
     });
     
 }
@@ -123,32 +93,21 @@ exports.resetPassHandler = async function (req, res, done) {
                             console.log(error)
                             transporter.close();
                     });
-            
-                    return res.render('resetpass', {
-                        resetmessage: "Your password has been reseted!",
-                        isPasswordReset: true
-                    });
-
+                    req.flash('successMessage', 'Your password has been reseted!');
+                    res.redirect('/');
                 });
         } else {
-            return res.render('resetpass', {
-                resetmessage: "Your password already reseted, try again later!",
-                isPasswordReset: true
-            });
+            req.flash('errorMessage', 'Your password already reseted, try again later!');
+            res.redirect('/reset-pass');
         }
 
     }
 
-    //Empty session message
-    req.session.messages = [];
-
     const user = await User.findOne({ where: { email: userEmail } });
 
     if (!user) {
-        return res.render('resetpass', {
-            resetmessage: "Wrong email address!",
-            isPasswordReset: true
-        });
+        req.flash('errorMessage', 'Wrong email address!');
+        res.redirect('/reset-pass');
     } 
 
     setPassResetDate(user);
@@ -156,9 +115,12 @@ exports.resetPassHandler = async function (req, res, done) {
 
 exports.resetPass = function (req, res) {
     
-    const sessionMessage = req.session.messages;
+    const errorMessage = req.flash('errorMessage');
 
-    res.render('resetpass', {title: "DDH Password Reset"});
+    res.render('resetpass', {
+        title: "DDH Password Reset",
+        errMessage: errorMessage[0]
+    });
  
 }
 
@@ -181,49 +143,44 @@ exports.newPasswordHandler = async function (req, res) {
         const user = await User.findOne({ where: { reghash: regHash } });
         if (user) {
             User.update({password: cryptedPassword}, { where: {reghash: regHash}}).then(function (newUser, created) {
-
+                req.flash('successMessage', 'You successfully reseted your password now you can login!');
                 res.redirect('/');
-
             });
         } else {
-            res.render('reset', {
-                title: "DDH Password Reset",
-                reghash: regHash,
-                isPasswordReset: true,
-                resetmessage: "Something went wrong!"
-            });
+            req.flash('errorMessage', 'Something went wrong!');
+            res.redirect('/');
         }     
    
     } else {
-        res.render('reset', {
-            title: "DDH Password Reset",
-            reghash: regHash,
-            isPasswordReset: true,
-            resetmessage: "Password must match!"
-        });
+        req.flash('errorMessage', 'Password must match!');
+        res.redirect(`/reset/${regHash}`);
     }
     
 }
 
-exports.newPassword = async function (req, res) {
+exports.newPassword = async function (req, res, done) {
 
     const { User } = require('../models');
     
-    var regHash = req.params.id;
+    const regHash = req.params.id;
 
     const user = await User.findOne({ where: { reghash: regHash } });
 
     const userInfo = user.get();
 
-    var date = new Date();
-    var fiveMin = 5 * 60 * 1000;
+    const errorMessage = req.flash('errorMessage');
+
+    const date = new Date();
+    const fiveMin = 5 * 60 * 1000;
         
     if((date - userInfo.resetdate) < fiveMin) {
         res.render('reset', {
             title: "DDH Password Reset",
-            reghash: regHash
+            reghash: regHash,
+            errorMessage: errorMessage[0]
         });
     } else {
+        req.flash('errorMessage', 'Your password reset link expired!');
         res.redirect('/');
     }
  
@@ -231,7 +188,6 @@ exports.newPassword = async function (req, res) {
 
 exports.dashboard = function(req, res) {
 
-    //console.log(req.user);
     const fullName = req.user.firstname + " " + req.user.lastname;
  
     res.render('dashboard', {
@@ -243,7 +199,6 @@ exports.dashboard = function(req, res) {
 
 exports.profile = function(req, res) {
 
-    //console.log(req.user);
     const fullName = req.user.firstname + " " + req.user.lastname;
  
     res.render('profile', {

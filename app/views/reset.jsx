@@ -20,8 +20,8 @@ function reset(props) {
                     <input className="btn" type="submit" value="Submit" />
                 </div>
             </form>
-                {props.isPasswordReset ?
-                    <div className="error">{props.resetmessage}</div>
+                {props.errorMessage ?
+                    <div className="error">{props.errorMessage}</div>
                     :
                     <></>
                 }

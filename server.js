@@ -1,13 +1,12 @@
-var express = require('express');
-var app = express();
-var passport   = require('passport');
-var session    = require('express-session');
-var bodyParser = require('body-parser');
-var exphbs = require('express-handlebars');
-
+const express = require('express');
+const app = express();
+const passport   = require('passport');
+const session    = require('express-session');
+const bodyParser = require('body-parser');
+const flash = require('connect-flash');
 const path = require('path');
 
-//var env = require('dotenv').load();
+//const env = require('dotenv').load();
 
 //Public folder
 app.use(express.static(__dirname + '/public'));
@@ -16,6 +15,9 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
  
+//For error messages
+app.use(flash());
+
 //For Passport
 app.use(session({ secret: 'randomstring',resave: true, saveUninitialized:true})); // session secret
 app.use(passport.initialize());
@@ -28,7 +30,7 @@ app.get('/', function(req, res) {
 });
  
 //Models
-var models = require("./app/models");
+const models = require("./app/models");
  
 //Sync Database
 models.sequelize.sync().then(function() {
@@ -41,13 +43,13 @@ models.sequelize.sync().then(function() {
  
 });
 
-//For Handlebars
+//For JSX
 app.set('views', './app/views');
 app.set('view engine', 'jsx');
 app.engine('jsx', require('express-react-views').createEngine());
 
 //Routes
-var route = require('./app/routes/route.js')(app,passport);
+const route = require('./app/routes/route.js')(app,passport);
 
 //load passport strategies
 require('./app/config/passport/passport.js')(passport, models.User);

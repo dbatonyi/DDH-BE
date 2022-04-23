@@ -16,8 +16,8 @@ function resetPass(props) {
                     <input className="btn" type="submit" value="Reset password" />
                 </div>
             </form>
-                {props.isPasswordReset ?
-                    <div className="error">{props.resetmessage}</div>
+                {props.errMessage ?
+                    <div className="error">{props.errMessage}</div>
                     :
                     <></>
                 }
