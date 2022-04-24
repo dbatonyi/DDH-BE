@@ -2,9 +2,10 @@ const React = require('react');
 const MainLayout = require('./layouts/mainLayout');
  
 function signIn(props) {
+
   return (
     <MainLayout title={props.title}>
-      <div className="login-background">
+        <div className="login-background">
         <div className="login-container">
             <div className="login-container__title"><h1>Login</h1></div>
             <form className="login-container__form" id="login" name="signin" method="post" action="login">

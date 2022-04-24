@@ -186,28 +186,6 @@ exports.newPassword = async function (req, res, done) {
  
 }
 
-exports.dashboard = function(req, res) {
-
-    const fullName = req.user.firstname + " " + req.user.lastname;
- 
-    res.render('dashboard', {
-        title: "DDH Dashboard",
-        username: fullName
-    });
- 
-}
-
-exports.profile = function(req, res) {
-
-    const fullName = req.user.firstname + " " + req.user.lastname;
- 
-    res.render('profile', {
-        title: "DDH User Profile",
-        username: fullName
-    });
- 
-}
-
 exports.logout = function(req, res) {
  
     req.session.destroy(function(err) {

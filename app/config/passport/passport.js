@@ -74,9 +74,6 @@ module.exports = function(passport, User) {
                 return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
             };
 
-            //Empty session message
-            req.session.messages = [];
-
             const user = await User.findOne({ where: { email: email } })
             
             if (user) {
@@ -124,9 +121,6 @@ module.exports = function(passport, User) {
             const isValidPassword = function(userpass, password) {
                 return bCrypt.compareSync(password, userpass);
             }
-
-            //Empty session message
-            req.session.messages = [];
         
             const user = await User.findOne({ where: { email: email } })
             
