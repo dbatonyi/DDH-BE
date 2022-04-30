@@ -6,20 +6,30 @@
     "host": "127.0.0.1",
     "dialect": "mariadb",
     "smtpemail": "smtpemail@gmail.com",
-    "smtppass": "smptpassword"
+    "smtppass": "smptpassword",
+    "jwtkey": "secretkey",
+    "jwtrefreshkey": "refreshkey"
   },
   "test": {
     "username": "root",
-    "password": null,
-    "database": "database_test",
+    "password": "",
+    "database": "db_name",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mariadb",
+    "smtpemail": "smtpemail@gmail.com",
+    "smtppass": "smptpassword",
+    "jwtkey": "secretkey",
+    "jwtrefreshkey": "refreshkey"
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
+    "password": "",
+    "database": "db_name",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mariadb",
+    "smtpemail": "smtpemail@gmail.com",
+    "smtppass": "smptpassword",
+    "jwtkey": "secretkey",
+    "jwtrefreshkey": "refreshkey"
   }
 }

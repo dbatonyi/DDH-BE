@@ -44,6 +44,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false
       },
+      refreshtoken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       resetdate: {
         allowNull: true,
         type: DataTypes.DATE,

@@ -1,5 +1,10 @@
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config.json')[env];
+const jwt = require("jsonwebtoken");
+
 var authController = require('../controllers/authController.js');
 var pageController = require('../controllers/pageController.js');
+var apiController = require('../controllers/apiController.js');
  
 module.exports = function(app, passport) {
 
@@ -55,5 +60,12 @@ module.exports = function(app, passport) {
     app.get('/dashboard', isLoggedIn, pageController.dashboard);
 
     app.get('/profile', isLoggedIn, pageController.profile);
+
+
+    // API
+
+    app.post('/api/register', apiController.apiRegister);
+
+    app.post('/api/login', apiController.apiLogin);
 
 }

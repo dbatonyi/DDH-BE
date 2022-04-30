@@ -82,7 +82,7 @@ module.exports = function(passport, User) {
             }
             
             const userPassword = generateHash(password);
-            const regHashRow = generateHash(email + passport);
+            const regHashRow = generateHash(email + password);
                     
             //Remove slashes
             const regHash = regHashRow.replace(/\/+$/, '');

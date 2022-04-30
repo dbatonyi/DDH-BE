@@ -5,8 +5,13 @@ const session    = require('express-session');
 const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const path = require('path');
+const cors = require('cors');
 
-//const env = require('dotenv').load();
+//CORS
+app.use(cors());
+
+//JSON
+app.use(express.json());
 
 //Public folder
 app.use(express.static(__dirname + '/public'));

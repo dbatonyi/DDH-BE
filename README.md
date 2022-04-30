@@ -1,4 +1,4 @@
-<h1>Drupal Development Helper (DDH) DEV</h1>
+<h1>Drupal Development Helper - BE (DDH) DEV</h1>
 <h3>App tech stack and functions</h3>
 
 <h4>Tech stack:</h4> 
@@ -18,6 +18,7 @@
 </ul>
 
 <ul>
+<li>npm install</li>
 <li>Start server: npm run start</li>
 <li>Convert sccs to css: npm run build</li>
 </ul>
