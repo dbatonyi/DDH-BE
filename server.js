@@ -6,9 +6,18 @@ const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const path = require('path');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const env = process.env.NODE_ENV || 'development';
+const config = require('./app/config/config.json')[env];
 
 //CORS
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: [config.frontendurl]
+}));
+
+//Cookie parser
+app.use(cookieParser());
 
 //JSON
 app.use(express.json());

@@ -68,4 +68,8 @@ module.exports = function(app, passport) {
 
     app.post('/api/login', apiController.apiLogin);
 
+    app.post('/api/logout', apiController.apiLogout);
+
+    app.get('/api/user', apiController.apiUser);
+
 }

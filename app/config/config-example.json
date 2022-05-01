@@ -5,10 +5,10 @@
     "database": "db_name",
     "host": "127.0.0.1",
     "dialect": "mariadb",
+    "frontendurl": "http://localhost:3000",
     "smtpemail": "smtpemail@gmail.com",
     "smtppass": "smptpassword",
-    "jwtkey": "secretkey",
-    "jwtrefreshkey": "refreshkey"
+    "jwtkey": "secretkey"
   },
   "test": {
     "username": "root",
@@ -16,10 +16,10 @@
     "database": "db_name",
     "host": "127.0.0.1",
     "dialect": "mariadb",
+    "frontendurl": "http://localhost:3000",
     "smtpemail": "smtpemail@gmail.com",
     "smtppass": "smptpassword",
-    "jwtkey": "secretkey",
-    "jwtrefreshkey": "refreshkey"
+    "jwtkey": "secretkey"
   },
   "production": {
     "username": "root",
@@ -27,9 +27,9 @@
     "database": "db_name",
     "host": "127.0.0.1",
     "dialect": "mariadb",
+    "frontendurl": "http://localhost:3000",
     "smtpemail": "smtpemail@gmail.com",
     "smtppass": "smptpassword",
-    "jwtkey": "secretkey",
-    "jwtrefreshkey": "refreshkey"
+    "jwtkey": "secretkey"
   }
 }

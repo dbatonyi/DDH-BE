@@ -86,8 +86,8 @@ exports.apiRegister = async function (req, res) {
         {
             email: email,
             password: userPassword,
-            firstname: req.body.firstName,
-            lastname: req.body.lastName,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
             role: 'User',
             reghash: regHash
         };  
@@ -133,89 +133,53 @@ exports.apiLogin = async function (req, res) {
 
     const accessToken = generateAccessToken(userInfo);
 
-    res.json({ status: 'Successfully logged in!', username: userInfo.email, role: userInfo.role, accessToken, refreshToken })
+    res.cookie('jwt', accessToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    })
 
-    return;
+    res.send({message: 'Success!'});
  
 }
 
-exports.apiRefresh = async function (req, res) {
+exports.apiUser = async function (req, res) {
 
     const { User } = require('../models');
 
-    const refreshToken = req.body.token;
+    try {
+        const cookie = req.cookies['jwt'];
 
-    function pushRefreshToken(data) {
-        User.update({ refreshtoken: data.refreshtoken }, { where: { refreshtoken: data.refreshtoken } });
-    }
+        const claims = jwt.verify(cookie, config.jwtkey);
 
-    const getUserData = await User.findOne({ where: { refreshtoken: refreshToken } });
-
-    if (getUserData) {
-
-        const userInfo = getUserData.get();
-
-        const getRefreshToken = userInfo.refreshtoken;
-
-        console.log(getRefreshToken.includes(refreshToken));
-
-        if (!refreshToken) return res.status(401).json("You are not authenticated!");
-        if (!getRefreshToken.includes(refreshToken)) {
-            return res.status(403).json("Refresh token is not valid!");
+        if (!claims) {
+            res.json({
+                message: "Invalid Token!",
+                auth: false
+            })
+            return;
         }
-        jwt.verify(refreshToken, config.jwtrefreshkey, (err, user) => {
-            err && console.log(err);
 
-            //Gerenate an access token
+        const user = await User.findOne({ where: { id: claims.id } });
 
-            const generateAccessToken = (user) => {
-                return jwt.sign(
-                    { id: userInfo.id, role: userInfo.role },
-                    config.jwtkey,
-                    { expiresIn: "15m" }
-                );
-            }
+        const { password, reghash, resetdate, updatedAt, createdAt, uuid, ...data } = await user.toJSON();
 
-            const generateRefreshToken = (user) => {
-                return jwt.sign(
-                    { id: userInfo.id, role: userInfo.role },
-                    config.jwtrefreshkey,
-                );
-            } 
+        res.send({userInfo: data, auth: true});
 
-            const newAccessToken = generateAccessToken(getUserData);
-            const newRefreshToken = generateRefreshToken(getUserData);
+    } catch {
+        res.json({
+            message: "Invalid Token!",
+            auth: false
+        })
+        return;
 
-            const data = { refreshtoken: refreshToken };
-    
-            pushRefreshToken(data);
-
-            res.status(200).json({
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
-            });
-        });
-
-    } else {
-        return res.status(403).json("Refresh token is not valid!");
     }
-    
+ 
 }
 
 exports.apiLogout = async function (req, res) {
 
-    const { User } = require('../models');
-
-    function pushRefreshToken(data) {
-        User.update({ refreshtoken: data.deletetoken }, { where: { refreshtoken: data.refreshtoken } });
-    }
-
-    const refreshToken = req.body.token;
-
-    const data = { refreshtoken: refreshToken, deletetoken: null };
+    res.cookie('jwt', "", { maxAge: 0 })
     
-    pushRefreshToken(data);
-
-    res.status(200).json("You logged out successfully.");
-
+    res.send({message: "Successfully logged out!"})
+ 
 }
