@@ -66,6 +66,10 @@ module.exports = function(app, passport) {
 
     app.post('/api/register', apiController.apiRegister);
 
+    app.post('/api/password/new', apiController.apiNewPassHandler);
+
+    app.post('/api/password/reset/:id', apiController.apiResetPasswordHandler);
+
     app.post('/api/login', apiController.apiLogin);
 
     app.post('/api/logout', apiController.apiLogout);

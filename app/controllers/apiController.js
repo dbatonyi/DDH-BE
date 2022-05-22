@@ -80,7 +80,7 @@ exports.apiRegister = async function (req, res) {
     const regHashRow = generateHash(email + password);
                     
     //Remove slashes
-    const regHash = regHashRow.replace(/\/+$/, '');
+    const regHash = regHashRow.replace(/\//g, "");
 
     const data =
         {
@@ -94,6 +94,117 @@ exports.apiRegister = async function (req, res) {
         
     createNewUser(data);
         
+}
+
+exports.apiNewPassHandler = async function (req, res) {
+
+    // Sequelize model require
+    const { User } = require('../models');
+    
+    const userEmail = req.body.email;
+
+    function setPassResetDate(user) {
+        const userInfo = user.get();
+
+        var date = new Date();
+        var twoMin = 2 * 60 * 1000;
+        
+        if((date - userInfo.resetdate) > twoMin) {
+
+            User.update({resetdate: new Date()}, { where: {email: userEmail}}).then(function (newUser, created) {
+
+                const userName = userInfo.firstname + " " + userInfo.lastname;
+                const reghash = userInfo.reghash;
+
+                var options = {
+                    viewEngine: {
+                    extname: '.hbs',
+                    layoutsDir: 'app/views/email/',
+                    defaultLayout : 'passreset',
+                    partialsDir : 'app/views/partials/'
+                    },
+                    viewPath: 'app/views/email/',
+                    extName: '.hbs'
+                    };
+
+                    var transporter = nodemailer.createTransport({
+                        host: config.smtpemail,
+                        service: 'gmail',
+                        auth: {
+                            user: config.smtpemail,
+                            pass: config.smtppass
+                        },
+                        secure: true,
+                        logger: true,
+                        ignoreTLS: true
+                    });
+
+                    transporter.use('compile', hbs(options));
+                    transporter.sendMail({
+                        from: config.smtpemail,
+                        to: userEmail,
+                        subject: 'DDH Reset password!',
+                        template: 'passreset',
+                        context: {
+                            user: userName,
+                            reghash: reghash
+                        }
+                        }, function (error, response) {
+                            console.log(error)
+                            transporter.close();
+                    });
+                    res.json({ status: 'Your password has been reseted!' })
+                    return;
+                });
+        } else {
+            res.json({ status: 'Your password already reseted, try again later!' })
+            return;
+        }
+
+    }
+
+    const user = await User.findOne({ where: { email: userEmail } });
+
+    if (!user) {
+        res.json({ status: 'Wrong email address!' })
+        return;
+    } 
+
+    setPassResetDate(user);
+}
+
+exports.apiResetPasswordHandler = async function (req, res) {
+    
+    const { User } = require('../models');
+
+    var generateHash = function(password) {
+        return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+    };
+    
+    var regHash = req.params.id;
+
+    const newPassword = req.body.password;
+    const reNewPassword = req.body.repassword;
+    const cryptedPassword = generateHash(newPassword);
+
+    if (newPassword === reNewPassword) {
+
+        const user = await User.findOne({ where: { reghash: regHash } });
+        if (user) {
+            User.update({ password: cryptedPassword }, { where: { reghash: regHash } }).then(function (newUser, created) {
+                res.json({ status: 'You successfully reseted your password now you can login!' })
+                return;
+            });
+        } else {
+            res.json({ status: 'Something went wrong!' })
+            return;
+        }     
+   
+    } else {
+        res.json({ status: 'Password must match!' })
+        return;
+    }
+    
 }
 
 exports.apiLogin = async function (req, res) {
