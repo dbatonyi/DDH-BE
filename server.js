@@ -8,7 +8,7 @@ const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const env = process.env.NODE_ENV || 'development';
-const config = require('./app/config/config.json')[env];
+const config = require('./config/config.json')[env];
 
 //CORS
 app.use(cors({
@@ -44,7 +44,7 @@ app.get('/', function(req, res) {
 });
  
 //Models
-const models = require("./app/models");
+const models = require("./models");
  
 //Sync Database
 models.sequelize.sync().then(function() {
@@ -58,15 +58,15 @@ models.sequelize.sync().then(function() {
 });
 
 //For JSX
-app.set('views', './app/views');
+app.set('views', './views');
 app.set('view engine', 'jsx');
 app.engine('jsx', require('express-react-views').createEngine());
 
 //Routes
-const route = require('./app/routes/route.js')(app,passport);
+const route = require('./routes/route.js')(app,passport);
 
 //load passport strategies
-require('./app/config/passport/passport.js')(passport, models.User);
+require('./config/passport/passport.js')(passport, models.User);
 
 //Create server
 app.listen(5000, function(err) {

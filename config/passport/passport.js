@@ -73,7 +73,7 @@ module.exports = function(passport, User) {
             const generateHash = function(password) {
                 return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
             };
-
+            
             const user = await User.findOne({ where: { email: email } })
             
             if (user) {
