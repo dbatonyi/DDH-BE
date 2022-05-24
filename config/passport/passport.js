@@ -23,14 +23,16 @@ module.exports = function(passport, User) {
             function createNewUser(data) {
                 User.create(data).then(function (newUser, created) {
 
+                    console.log(config.host+":5000/login")
+
                         const options = {
                             viewEngine: {
                             extname: '.hbs',
-                            layoutsDir: 'app/views/email/',
+                            layoutsDir: 'views/email/',
                             defaultLayout : 'registration',
-                            partialsDir : 'app/views/partials/'
+                            partialsDir : 'views/partials/'
                         },
-                        viewPath: 'app/views/email/',
+                        viewPath: 'views/email/',
                         extName: '.hbs'
                         };
 
@@ -53,7 +55,8 @@ module.exports = function(passport, User) {
                             subject: 'DDH registration!',
                             template: 'registration',
                             context: {
-                                user : data.firstname + " " + data.lastname
+                                user: data.firstname + " " + data.lastname,
+                                url: config.host+":5000/login"                            
                             }
                             }, function (error, response) {
                                 console.log(error)

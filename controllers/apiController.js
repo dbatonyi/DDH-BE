@@ -11,6 +11,7 @@ exports.apiRegister = async function (req, res) {
 
     const { User } = require('../models');
 
+    const originUrl = req.get('origin');
     const email = req.body.email;
     const password = req.body.password;
 
@@ -20,11 +21,11 @@ exports.apiRegister = async function (req, res) {
             const options = {
                 viewEngine: {
                 extname: '.hbs',
-                layoutsDir: 'app/views/email/',
-                defaultLayout : 'registration',
-                partialsDir : 'app/views/partials/'
+                layoutsDir: 'views/email/',
+                defaultLayout : 'apiregistration',
+                partialsDir : 'views/partials/'
                 },
-            viewPath: 'app/views/email/',
+            viewPath: 'views/email/',
             extName: '.hbs'
             };
 
@@ -47,7 +48,8 @@ exports.apiRegister = async function (req, res) {
                     subject: 'DDH registration!',
                     template: 'registration',
                     context: {
-                        user : data.firstname + " " + data.lastname
+                        user: data.firstname + " " + data.lastname,
+                        url: originUrl
                     }
                     }, function (error, response) {
                         console.log(error)

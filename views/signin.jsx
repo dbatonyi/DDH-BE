@@ -32,7 +32,6 @@ function signIn(props) {
                 </div>
             </form>
                 <div className="login-container__sign-up"><p>New User? <a href="/signup">Create new account!</a></p></div>
-                <div className="login-container__reset-pass"><a href="/reset-pass">Reset password!</a></div>
                     {props.errMessage ?
                         <div className="error">{props.errMessage}</div>
                     :

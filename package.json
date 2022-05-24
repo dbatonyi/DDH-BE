@@ -1,6 +1,6 @@
 {
   "name": "DDH-project",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "scripts": {
     "start": "node server.js",
     "build": "node-sass public/scss -o public/css"

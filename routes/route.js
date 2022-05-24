@@ -41,19 +41,11 @@ module.exports = function(app, passport) {
  
     app.get('/login', authController.signin);
 
-    app.get('/reset-pass', authController.resetPass);
-
     app.get('/logout', authController.logout);
-
-    app.get('/reset/:id', authController.newPassword);
  
     app.post('/signup', singupHandler);
 
     app.post('/login', signinHandler);
-
-    app.post('/reset-pass', authController.resetPassHandler);
-
-    app.post('/reset/:id', authController.newPasswordHandler);
 
     //Page
 
