@@ -12,8 +12,7 @@ exports.apiRegister = async function (req, res) {
     const { User } = require('../models');
 
     const originUrl = req.get('origin');
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password } = req.body;
 
     function createNewUser(data) {
         User.create(data).then(function (newUser, created) {
@@ -185,8 +184,7 @@ exports.apiResetPasswordHandler = async function (req, res) {
     
     var regHash = req.params.id;
 
-    const newPassword = req.body.password;
-    const reNewPassword = req.body.repassword;
+    const { newPassword, reNewPassword } = req.body;
     const cryptedPassword = generateHash(newPassword);
 
     if (newPassword === reNewPassword) {
@@ -212,9 +210,7 @@ exports.apiResetPasswordHandler = async function (req, res) {
 exports.apiLogin = async function (req, res) {
 
     const { User } = require('../models');
-
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password } = req.body;
         
     const isValidPassword = function(userpass, password) {
         return bCrypt.compareSync(password, userpass);
@@ -274,7 +270,7 @@ exports.apiUser = async function (req, res) {
 
         const user = await User.findOne({ where: { id: claims.id } });
 
-        const { password, reghash, resetdate, updatedAt, createdAt, uuid, ...data } = await user.toJSON();
+        const { password, reghash, resetdate, updatedAt, createdAt, id, ...data } = await user.toJSON();
 
         res.send({userInfo: data, auth: true});
 
@@ -294,5 +290,22 @@ exports.apiLogout = async function (req, res) {
     res.cookie('jwt', "", { maxAge: 0 })
     
     res.send({message: "Successfully logged out!"})
+ 
+}
+
+exports.apiNewTask = async function (req, res) {
+
+    const { userUuid, title, taskCategory, taskTags, taskShort, taskDescription } = req.body;
+
+    try {
+        const user = await User.findOne({ where: { uuid: userUuid } });
+
+        const post = await Task.create({ title, taskCategory, taskTags, taskShort, taskDescription, userId: user.id });
+
+        return res.send({message: "New task successfully added!"});
+    } catch (err) {
+        console.log(err);
+        return res.send({message: "Something went wrong!"});
+    }
  
 }

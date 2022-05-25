@@ -1,9 +1,3 @@
-const bCrypt = require('bcrypt-nodejs');
-const nodemailer = require('nodemailer');
-const hbs = require('nodemailer-express-handlebars');
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.json')[env];
-
 var exports = module.exports = {}
  
 exports.signup = function (req, res) {

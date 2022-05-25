@@ -20,8 +20,14 @@ module.exports = {
         allowNull: false,
       },
       taskCategory: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
+      },
+      taskTags: {
+        type: DataTypes.STRING
+      },
+      taskShort: {
+        type: DataTypes.STRING
       },
       taskDescription: {
         type: DataTypes.STRING

@@ -16,10 +16,7 @@ exports.dashboard = function(req, res) {
 
 exports.profile = function (req, res) {
     
-    const firstName = req.user.firstName;
-    const lastName = req.user.lastname;
-    const email = req.user.email;
-    const permissionLevel = req.user.role;
+    const { firstName, lastName, email, permissionLevel } = req.user;
  
     res.render('profile', {
         title: "DDH User Profile",

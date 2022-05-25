@@ -9,11 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-     static associate({ User, Knowledge }) {
+     static associate({ User }) {
       // define association here
       // userId
       this.belongsTo(User, { foreignKey: 'userId', as: 'user' });
-      this.hasMany(Knowledge, { foreignKey: 'knowledgeId', as: 'knowledges' });
     }
 
     toJSON() {
@@ -30,12 +29,20 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     taskCategory: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    taskTags: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    taskShort: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     taskDescription: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     }
   }, {
     sequelize,

@@ -28,10 +28,6 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      lastlogin: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
       status: {
         type: DataTypes.ENUM('active', 'inactive'),
         allowNull: false,
