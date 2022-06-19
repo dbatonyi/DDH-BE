@@ -6,7 +6,8 @@
     "host": "127.0.0.1",
     "dialect": "mariadb",
     "frontendurl": "http://localhost:3000",
-    "smtpemail": "smtpemail@gmail.com",
+    "smtphost": "smtp.mail.yahoo.com",
+    "smtpemail": "smtpemail@yahoo.com",
     "smtppass": "smptpassword",
     "jwtkey": "secretkey"
   },
@@ -17,7 +18,8 @@
     "host": "127.0.0.1",
     "dialect": "mariadb",
     "frontendurl": "http://localhost:3000",
-    "smtpemail": "smtpemail@gmail.com",
+    "smtphost": "smtp.mail.yahoo.com",
+    "smtpemail": "smtpemail@yahoo.com",
     "smtppass": "smptpassword",
     "jwtkey": "secretkey"
   },
@@ -28,7 +30,8 @@
     "host": "127.0.0.1",
     "dialect": "mariadb",
     "frontendurl": "http://localhost:3000",
-    "smtpemail": "smtpemail@gmail.com",
+    "smtphost": "smtp.mail.yahoo.com",
+    "smtpemail": "smtpemail@yahoo.com",
     "smtppass": "smptpassword",
     "jwtkey": "secretkey"
   }

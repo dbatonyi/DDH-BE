@@ -27,15 +27,15 @@ exports.apiRegister = async function (req, res) {
       };
 
       const transporter = nodemailer.createTransport({
-        host: config.smtpemail,
-        service: "gmail",
+        host: config.smtpehost,
+        port: 465,
+        service: "yahoo",
+        secure: false,
         auth: {
           user: config.smtpemail,
           pass: config.smtppass,
         },
-        secure: true,
         logger: true,
-        ignoreTLS: true,
       });
 
       transporter.use("compile", hbs(options));
@@ -86,6 +86,7 @@ exports.apiRegister = async function (req, res) {
 
   const data = {
     email: email,
+    username: email,
     password: userPassword,
     firstname: req.body.firstname,
     lastname: req.body.lastname,
@@ -119,24 +120,24 @@ exports.apiNewPassHandler = async function (req, res) {
         var options = {
           viewEngine: {
             extname: ".hbs",
-            layoutsDir: "app/views/email/",
+            layoutsDir: "views/email/",
             defaultLayout: "passreset",
-            partialsDir: "app/views/partials/",
+            partialsDir: "views/partials/",
           },
-          viewPath: "app/views/email/",
+          viewPath: "views/email/",
           extName: ".hbs",
         };
 
         var transporter = nodemailer.createTransport({
-          host: config.smtpemail,
-          service: "gmail",
+          host: config.smtpehost,
+          port: 465,
+          service: "yahoo",
+          secure: false,
           auth: {
             user: config.smtpemail,
             pass: config.smtppass,
           },
-          secure: true,
           logger: true,
-          ignoreTLS: true,
         });
 
         transporter.use("compile", hbs(options));
@@ -314,5 +315,27 @@ exports.apiNewTask = async function (req, res) {
   } catch (err) {
     console.log(err);
     return res.send({ message: "Something went wrong!" });
+  }
+};
+
+exports.apiTaskList = async function (req, res) {
+  const { User, Task } = require("../models");
+
+  try {
+    const tasks = await Task.findAll({
+      attributes: [
+        "title",
+        "taskCategory",
+        "taskShort",
+        "createdAt",
+        "updatedAt",
+      ],
+      include: [{ model: User, as: "user", attributes: ["username"] }],
+    });
+
+    return res.json(tasks);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
   }
 };

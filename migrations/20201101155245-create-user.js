@@ -1,7 +1,7 @@
-'use strict'
+"use strict";
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable("users", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,6 +11,10 @@ module.exports = {
       uuid: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       firstname: {
         type: DataTypes.STRING,
@@ -29,7 +33,7 @@ module.exports = {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM('active', 'inactive'),
+        type: DataTypes.ENUM("active", "inactive"),
         allowNull: false,
       },
       role: {
@@ -38,7 +42,7 @@ module.exports = {
       },
       reghash: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       resetdate: {
         allowNull: true,
@@ -52,9 +56,9 @@ module.exports = {
         allowNull: false,
         type: DataTypes.DATE,
       },
-    })
+    });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable('users')
+    await queryInterface.dropTable("users");
   },
-}
+};

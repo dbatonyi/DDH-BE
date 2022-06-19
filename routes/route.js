@@ -1,72 +1,70 @@
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.json')[env];
-const jwt = require("jsonwebtoken");
+const env = process.env.NODE_ENV || "development";
+const config = require("../config/config.json")[env];
 
-var authController = require('../controllers/authController.js');
-var pageController = require('../controllers/pageController.js');
-var apiController = require('../controllers/apiController.js');
- 
-module.exports = function(app, passport) {
+var authController = require("../controllers/authController.js");
+var pageController = require("../controllers/pageController.js");
+var apiController = require("../controllers/apiController.js");
 
-    function isLoggedIn(req, res, next) {
-        if (req.isAuthenticated())
-            return next();  
+module.exports = function (app, passport) {
+  function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) return next();
 
-        res.redirect('/login');
-    }
+    res.redirect("/login");
+  }
 
-    function singupHandler(req, res, next) {
-        passport.authenticate('local-signup', {
-            successRedirect: '/login',
-        
-            failureRedirect: '/signup',
-            
-            failureMessage: true
-        })(req, res, next);  
-    }
+  function singupHandler(req, res, next) {
+    passport.authenticate("local-signup", {
+      successRedirect: "/login",
 
-    function signinHandler(req, res, next) {
-        passport.authenticate('local-signin', {
-            successRedirect: '/dashboard',
-        
-            failureRedirect: '/login',
-            
-            failureMessage: true
-        })(req, res, next);
-    }
+      failureRedirect: "/signup",
 
-    //Auth
- 
-    app.get('/signup', authController.signup);
- 
-    app.get('/login', authController.signin);
+      failureMessage: true,
+    })(req, res, next);
+  }
 
-    app.get('/logout', authController.logout);
- 
-    app.post('/signup', singupHandler);
+  function signinHandler(req, res, next) {
+    passport.authenticate("local-signin", {
+      successRedirect: "/dashboard",
 
-    app.post('/login', signinHandler);
+      failureRedirect: "/login",
 
-    //Page
+      failureMessage: true,
+    })(req, res, next);
+  }
 
-    app.get('/dashboard', isLoggedIn, pageController.dashboard);
+  //Auth
 
-    app.get('/profile', isLoggedIn, pageController.profile);
+  app.get("/signup", authController.signup);
 
+  app.get("/login", authController.signin);
 
-    // API
+  app.get("/logout", authController.logout);
 
-    app.post('/api/register', apiController.apiRegister);
+  app.post("/signup", singupHandler);
 
-    app.post('/api/password/new', apiController.apiNewPassHandler);
+  app.post("/login", signinHandler);
 
-    app.post('/api/password/reset/:id', apiController.apiResetPasswordHandler);
+  //Page
 
-    app.post('/api/login', apiController.apiLogin);
+  app.get("/dashboard", isLoggedIn, pageController.dashboard);
 
-    app.post('/api/logout', apiController.apiLogout);
+  app.get("/profile", isLoggedIn, pageController.profile);
 
-    app.get('/api/user', apiController.apiUser);
+  // API
 
-    app.post('/api/task/new', apiController.apiNewTask);
-}
+  app.post("/api/register", apiController.apiRegister);
+
+  app.post("/api/password/new", apiController.apiNewPassHandler);
+
+  app.post("/api/password/reset/:id", apiController.apiResetPasswordHandler);
+
+  app.post("/api/login", apiController.apiLogin);
+
+  app.post("/api/logout", apiController.apiLogout);
+
+  app.get("/api/user", apiController.apiUser);
+
+  app.post("/api/task/new", apiController.apiNewTask);
+
+  app.get("/api/task/list", apiController.apiTaskList);
+};
