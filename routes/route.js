@@ -67,4 +67,6 @@ module.exports = function (app, passport) {
   app.post("/api/task/new", apiController.apiNewTask);
 
   app.get("/api/task/list", apiController.apiTaskList);
+
+  app.get("/api/task/:id", apiController.apiTask);
 };

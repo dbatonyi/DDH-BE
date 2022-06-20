@@ -323,17 +323,39 @@ exports.apiTaskList = async function (req, res) {
 
   try {
     const tasks = await Task.findAll({
+      attributes: ["id", "title", "taskCategory", "createdAt", "updatedAt"],
+      include: [{ model: User, as: "user", attributes: ["username"] }],
+    });
+
+    return res.json(tasks);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+exports.apiTask = async function (req, res) {
+  var taskId = req.params.id;
+
+  const { User, Task } = require("../models");
+
+  try {
+    const task = await Task.findOne({
+      where: { id: taskId },
       attributes: [
+        "id",
         "title",
         "taskCategory",
+        "taskTags",
         "taskShort",
+        "taskDescription",
         "createdAt",
         "updatedAt",
       ],
       include: [{ model: User, as: "user", attributes: ["username"] }],
     });
 
-    return res.json(tasks);
+    return res.json(task);
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
