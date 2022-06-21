@@ -361,3 +361,37 @@ exports.apiTask = async function (req, res) {
     return res.status(500).json(err);
   }
 };
+
+exports.apiEditTask = async function (req, res) {
+  var taskId = req.params.id;
+
+  const { Task } = require("../models");
+
+  const {
+    title,
+    taskCategory,
+    taskTags,
+    taskShort,
+    taskDescription,
+    updateAt,
+  } = req.body;
+
+  try {
+    const task = await Task.update(
+      {
+        title,
+        taskCategory,
+        taskTags,
+        taskShort,
+        taskDescription,
+        updateAt,
+      },
+      { where: { id: taskId } }
+    );
+
+    return res.send({ message: "Successfully edited the task!" });
+  } catch (err) {
+    console.log(err);
+    return res.send({ message: "Something went wrong!" });
+  }
+};
