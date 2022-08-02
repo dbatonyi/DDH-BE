@@ -221,12 +221,12 @@ exports.apiLogin = async function (req, res) {
   const user = await User.findOne({ where: { email: email } });
 
   if (!user) {
-    res.json({ status: "Wrong email address." });
+    res.status(401).send({ message: "Wrong email address." });
     return;
   }
 
   if (!isValidPassword(user.password, password)) {
-    res.json({ status: "Incorrect password." });
+    res.status(401).send({ message: "Incorrect password." });
     return;
   }
 
@@ -247,7 +247,7 @@ exports.apiLogin = async function (req, res) {
     maxAge: 24 * 60 * 60 * 1000, // 1 day
   });
 
-  res.send({ message: "Success!" });
+  res.status(200).send({ message: "Success!" });
 };
 
 exports.apiUser = async function (req, res) {
