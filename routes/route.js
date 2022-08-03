@@ -71,4 +71,6 @@ module.exports = function (app, passport) {
   app.get("/api/task/:id", apiController.apiTask);
 
   app.post("/api/task/edit/:id", apiController.apiEditTask);
+
+  app.post("/api/tmf-form", apiController.apiTaskManagerForm);
 };
