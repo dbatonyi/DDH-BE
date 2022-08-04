@@ -70,6 +70,8 @@ module.exports = function (app, passport) {
 
   app.get("/api/task/:id", apiController.apiTask);
 
+  app.delete("/api/task/:id", apiController.apiDeleteTask);
+
   app.post("/api/task/edit/:id", apiController.apiEditTask);
 
   app.post("/api/tmf-form", apiController.apiTaskManagerForm);

@@ -324,7 +324,9 @@ exports.apiTaskList = async function (req, res) {
   try {
     const tasks = await Task.findAll({
       attributes: ["id", "title", "taskCategory", "createdAt", "updatedAt"],
-      include: [{ model: User, as: "user", attributes: ["username"] }],
+      include: [
+        { model: User, as: "user", attributes: ["firstname", "lastname"] },
+      ],
     });
 
     return res.json(tasks);
@@ -356,6 +358,25 @@ exports.apiTask = async function (req, res) {
     });
 
     return res.json(task);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+exports.apiDeleteTask = async function (req, res) {
+  var taskId = req.params.id;
+
+  const { Task } = require("../models");
+
+  try {
+    const task = await Task.findOne({
+      where: { id: taskId },
+    });
+
+    await task.destroy();
+
+    return res.status(200).send({ message: "Task successfully deleted!" });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
