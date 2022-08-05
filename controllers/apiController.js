@@ -416,10 +416,3 @@ exports.apiEditTask = async function (req, res) {
     return res.send({ message: "Something went wrong!" });
   }
 };
-
-exports.apiTaskManagerForm = async function (req, res) {
-  const { title, packages } = req.body;
-  console.log(req.body);
-
-  res.status(200).send({ message: "Your form successfully accepted!" });
-};

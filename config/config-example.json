@@ -9,7 +9,9 @@
     "smtphost": "smtp.mail.yahoo.com",
     "smtpemail": "smtpemail@yahoo.com",
     "smtppass": "smptpassword",
-    "jwtkey": "secretkey"
+    "jwtkey": "secretkey",
+    "meisterapikey": "meisterapikey",
+    "meisterprojectname": "meisterprojectname"
   },
   "test": {
     "username": "root",
@@ -21,7 +23,9 @@
     "smtphost": "smtp.mail.yahoo.com",
     "smtpemail": "smtpemail@yahoo.com",
     "smtppass": "smptpassword",
-    "jwtkey": "secretkey"
+    "jwtkey": "secretkey",
+    "meisterapikey": "meisterapikey",
+    "meisterprojectname": "meisterprojectname"
   },
   "production": {
     "username": "root",
@@ -33,6 +37,8 @@
     "smtphost": "smtp.mail.yahoo.com",
     "smtpemail": "smtpemail@yahoo.com",
     "smtppass": "smptpassword",
-    "jwtkey": "secretkey"
+    "jwtkey": "secretkey",
+    "meisterapikey": "meisterapikey",
+    "meisterprojectname": "meisterprojectname"
   }
 }

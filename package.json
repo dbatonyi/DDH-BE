@@ -1,11 +1,12 @@
 {
   "name": "DDH-project",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "scripts": {
     "start": "node server.js",
     "build": "node-sass public/scss -o public/css"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.19.2",
     "connect-flash": "^0.1.1",

@@ -4,6 +4,7 @@ const config = require("../config/config.json")[env];
 var authController = require("../controllers/authController.js");
 var pageController = require("../controllers/pageController.js");
 var apiController = require("../controllers/apiController.js");
+var tmfController = require("../controllers/tmfController.js");
 
 module.exports = function (app, passport) {
   function isLoggedIn(req, res, next) {
@@ -74,5 +75,5 @@ module.exports = function (app, passport) {
 
   app.post("/api/task/edit/:id", apiController.apiEditTask);
 
-  app.post("/api/tmf-form", apiController.apiTaskManagerForm);
+  app.post("/api/tmf-form", tmfController.apiTaskManagerForm);
 };
