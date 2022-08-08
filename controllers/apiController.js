@@ -27,13 +27,13 @@ exports.apiRegister = async function (req, res) {
       };
 
       const transporter = nodemailer.createTransport({
-        host: config.smtpehost,
+        host: config.SMPTHOST,
         port: 465,
         service: "yahoo",
         secure: false,
         auth: {
-          user: config.smtpemail,
-          pass: config.smtppass,
+          user: config.SMTPEMAIL,
+          pass: config.SMTPPASSWORD,
         },
         logger: true,
       });
@@ -41,7 +41,7 @@ exports.apiRegister = async function (req, res) {
       transporter.use("compile", hbs(options));
       transporter.sendMail(
         {
-          from: config.smtpemail,
+          from: config.SMTPEMAIL,
           to: data.email,
           subject: "DDH registration!",
           template: "registration",
@@ -129,13 +129,13 @@ exports.apiNewPassHandler = async function (req, res) {
         };
 
         var transporter = nodemailer.createTransport({
-          host: config.smtpehost,
+          host: config.SMTPHOST,
           port: 465,
           service: "yahoo",
           secure: false,
           auth: {
-            user: config.smtpemail,
-            pass: config.smtppass,
+            user: config.SMTPEMAIL,
+            pass: config.SMTPPASSWORD,
           },
           logger: true,
         });
@@ -143,7 +143,7 @@ exports.apiNewPassHandler = async function (req, res) {
         transporter.use("compile", hbs(options));
         transporter.sendMail(
           {
-            from: config.smtpemail,
+            from: config.SMTPEMAIL,
             to: userEmail,
             subject: "DDH Reset password!",
             template: "passreset",

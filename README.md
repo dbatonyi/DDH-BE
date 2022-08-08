@@ -4,7 +4,7 @@
 <h4>Tech stack:</h4> 
 <ul>
 <li>Node.js</li>
-<li>Sequelize</li>			
+<li>Sequelize</li>
 </ul>
 
 <h4>App development roadmap:</h4>
@@ -12,9 +12,8 @@
 <ul>
 <li>Login/Register users | Authentication (DONE)</li>
 <li>User role system development (WIP)</li>
-<li>Interface for adding/view/edit/delete tasks and knowledge base</li>
-<li>Create a form, where editors can create a project by selecting the appropriate parameters</li>
-<li>Display the completed project in meistertask via API</li>
+<li>API endpoints for the frontend (DONE)</li>
+<li>Connect with Trello API (DONE)</li>
 </ul>
 
 <ul>

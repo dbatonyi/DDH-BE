@@ -1,4 +1,5 @@
 node_modules
+dbexport/*.csv
 config/config.json
 package-lock.json
 .env

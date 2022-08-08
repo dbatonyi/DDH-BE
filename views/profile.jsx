@@ -8,6 +8,7 @@ function profile(props) {
         <div className="dashboard-container">
         <Sidebar />
           <div className="dashboard-container__main">
+            {props.systemMessage ? <div className='system-message'>{props.systemMessage}</div> : null}
               <div className="profile-container">
                     <label>Firstname:</label>
                     <div className='profile-container__firstname'>
@@ -21,10 +22,11 @@ function profile(props) {
                     <div className='profile-container__email'>
                       <p>{props.email}</p>
                     </div>
-                    <label>Permission level:</label>
+                    <label>Role:</label>
                     <div className='profile-container__permission'>
-                      <p>{props.permissionlevel}</p>
+                      <p>{props.role}</p>
                     </div>
+                    <a href='/export-database'>Export tasks table (WIP)</a>
               </div>
           </div>
         </div>
