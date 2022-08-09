@@ -6,7 +6,7 @@ const config = require("../config/config.json")[env];
 var exports = (module.exports = {});
 
 exports.apiTaskManagerForm = async function (req, res) {
-  const { title, packages } = req.body;
+  const { title, dUpdate, packages } = req.body;
   console.log(req.body);
 
   async function generateTrelloTask() {
@@ -36,6 +36,8 @@ exports.apiTaskManagerForm = async function (req, res) {
     );
 
     console.log("Board created");
+
+    generateTrelloTask();
   }
 
   async function checkBoardList(boardsData) {
@@ -61,26 +63,47 @@ exports.apiTaskManagerForm = async function (req, res) {
           return x.id;
         });
 
-      createNewCard(getListId);
+      if (dUpdate === "true") {
+        createNewCard(getListId, "Drupal update");
+      }
+
+      if (packages !== "") {
+        createNewCard(getListId, "Install/Config Drupal");
+
+        switch (packages) {
+          case "basic":
+            createNewCard(getListId, "Basic Package");
+            break;
+          case "flexi":
+            createNewCard(getListId, "Flexi Package");
+            break;
+          case "custom":
+            createNewCard(getListId, "Custom Package");
+            break;
+          default:
+            break;
+        }
+      }
     } else {
       createNewList(getBoardId);
     }
   }
 
   async function createNewList(getBoardId) {
-    const listName = config.TRELLO_LIST_NAME;
     const createList = await axios.post(
-      `https://api.trello.com/1/boards/${getBoardId[0]}/lists?name=${listName}&key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`
+      `https://api.trello.com/1/boards/${getBoardId[0]}/lists?name=${config.TRELLO_LIST_NAME}&key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`
     );
 
     console.log("List created");
+
+    generateTrelloTask();
   }
 
-  async function createNewCard(getListId) {
+  async function createNewCard(getListId, type) {
     const createCard = await axios.post(
       `https://api.trello.com/1/cards/?idList=${getListId[0]}&key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
       {
-        name: title,
+        name: title + " - " + type,
         desc: "random task desc",
       }
     );
@@ -91,10 +114,10 @@ exports.apiTaskManagerForm = async function (req, res) {
 
     console.log("Card created");
 
-    createChecklist(getCardId);
+    createChecklist(getCardId, type);
   }
 
-  async function createChecklist(getCardId) {
+  async function createChecklist(getCardId, type) {
     const createChecklist = await axios.post(
       `https://api.trello.com/1/cards/${getCardId}/checklists?key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
       {
@@ -112,18 +135,60 @@ exports.apiTaskManagerForm = async function (req, res) {
   }
 
   async function createChecklistItem(getChecklistId) {
+    // Get all tasks from database
+    const { Task } = require("../models");
+
+    const tasks = await Task.findAll({
+      attributes: ["id", "title", "taskCategory", "taskTags", "taskShort"],
+    });
+    const allTaskData = await tasks.map((x) => {
+      return x.dataValues;
+    });
+
+    //console.log(allTaskData);
+
+    // Recursive function to create checklist item
+    if (dUpdate === "true") {
+      createChecklistItemRecursively(
+        getChecklistId,
+        allTaskData,
+        "Drupal Update"
+      );
+    }
+  }
+
+  async function createChecklistItemRecursively(
+    getChecklistId,
+    allTaskData,
+    tag
+  ) {
+    // Filter all tasks by tag
+    const filteredTask = allTaskData.filter((x) => {
+      return x.taskTags.includes(tag);
+    });
+
+    filteredTask.forEach((x) => {
+      // Create checklist item
+      generateChecklistItem(getChecklistId, x);
+    });
+
+    //createChecklistItem(getChecklistId);
+  }
+
+  async function generateChecklistItem(getChecklistId, data) {
     const createChecklistItem = await axios.post(
-      `https://api.trello.com/1/checklists/${getChecklistId}/checkItems?name={name}&key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
+      `https://api.trello.com/1/checklists/${getChecklistId}/checkItems?key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
       {
-        name: "Checklist item",
+        name:
+          data.taskShort + " --- " + config.FRONTEND_URL + "/task/" + data.id,
       }
     );
 
     const checklistItemData = await createChecklistItem.data;
-
-    console.log("Checklist item created: ", checklistItemData);
+    console.log("Checklist item created");
   }
 
+  // Start the function
   generateTrelloTask();
 
   res.status(200).send({ message: "Your form successfully accepted!" });
