@@ -6,7 +6,46 @@ const config = require("../config/config.json")[env];
 var exports = (module.exports = {});
 
 exports.apiTaskManagerForm = async function (req, res) {
-  const { title, dUpdate, packages } = req.body;
+  const {
+    title,
+    devUrl,
+    devSsh,
+    dUpdate,
+    ourServer,
+    oldUrl,
+    dVersion,
+    migration,
+    packages,
+    blog,
+    webshop,
+    moreLanguage,
+    otherLanguage,
+    paymentMethod,
+    paymentMethodOther,
+    customWebshop,
+    customerRegistration,
+    uniqueProductVariation,
+    upvAdditional,
+    invoiceSystem,
+    stockManagement,
+    stockUpdate,
+    additionalCurrencies,
+    additionalCurrenciesOther,
+    additionalVat,
+    additionalVatOther,
+    couponSystem,
+    productFilters,
+    additionalFilters,
+    productPages,
+    webshopFeatures,
+    extraElements,
+    extraElementsOther,
+    flexibleLayout,
+    uniqueDesign,
+    uniqueDesignUrl,
+    uniqueEmail,
+    extraFeatures,
+  } = req.body;
   console.log(req.body);
 
   async function generateTrelloTask() {
@@ -64,21 +103,21 @@ exports.apiTaskManagerForm = async function (req, res) {
         });
 
       if (dUpdate === "true") {
-        createNewCard(getListId, "Drupal update");
+        await createNewCard(getListId, "Drupal update");
       }
 
       if (packages !== "") {
-        createNewCard(getListId, "Install/Config Drupal");
+        await createNewCard(getListId, "Install/Config Drupal");
 
         switch (packages) {
           case "basic":
-            createNewCard(getListId, "Basic Package");
+            await createNewCard(getListId, "Basic Package");
             break;
           case "flexi":
-            createNewCard(getListId, "Flexi Package");
+            await createNewCard(getListId, "Flexi Package");
             break;
           case "custom":
-            createNewCard(getListId, "Custom Package");
+            await createNewCard(getListId, "Custom Package");
             break;
           default:
             break;
@@ -100,11 +139,14 @@ exports.apiTaskManagerForm = async function (req, res) {
   }
 
   async function createNewCard(getListId, type) {
+    const cardDescription = `${devUrl} \n ${devSsh} \n ${
+      oldUrl ? "Old site: " + oldUrl : ""
+    }`;
     const createCard = await axios.post(
       `https://api.trello.com/1/cards/?idList=${getListId[0]}&key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
       {
-        name: title + " - " + type,
-        desc: "random task desc",
+        name: `${title} - ${type}`,
+        desc: cardDescription,
       }
     );
 
@@ -131,10 +173,10 @@ exports.apiTaskManagerForm = async function (req, res) {
 
     console.log("Checklist created");
 
-    createChecklistItem(getChecklistId);
+    checklistItemController(getChecklistId, type);
   }
 
-  async function createChecklistItem(getChecklistId) {
+  async function checklistItemController(getChecklistId, type) {
     // Get all tasks from database
     const { Task } = require("../models");
 
@@ -145,47 +187,304 @@ exports.apiTaskManagerForm = async function (req, res) {
       return x.dataValues;
     });
 
-    //console.log(allTaskData);
+    switch (type) {
+      case "Drupal update":
+        await createChecklistItem(getChecklistId, allTaskData, "Drupal Update");
 
-    // Recursive function to create checklist item
-    if (dUpdate === "true") {
-      createChecklistItemRecursively(
+        if (ourServer === "false") {
+          await createChecklistItem(
+            getChecklistId,
+            allTaskData,
+            "External Server"
+          );
+        }
+        if (dVersion !== "") {
+          if (dVersion === "d7-latest") {
+            await createChecklistItem(getChecklistId, allTaskData, "Drupal 7");
+          } else if (dVersion === "d8-latest") {
+            await createChecklistItem(getChecklistId, allTaskData, "Drupal 8");
+          }
+        }
+        if (migration === true) {
+          await createChecklistItem(getChecklistId, allTaskData, "Migration");
+        }
+        break;
+      case "Install/Config Drupal":
+        await createChecklistItem(
+          getChecklistId,
+          allTaskData,
+          "Install Drupal"
+        );
+        break;
+      case "Basic Package":
+        await packageController(getChecklistId, allTaskData);
+
+        break;
+      case "Flexi Package":
+        await packageController(getChecklistId, allTaskData);
+
+        break;
+      case "Custom Package":
+        await packageController(getChecklistId, allTaskData);
+
+        break;
+      default:
+        break;
+    }
+  }
+
+  async function packageController(getChecklistId, allTaskData) {
+    if (moreLanguage === true && otherLanguage !== null) {
+      await postUniqueChecklistItem(
         getChecklistId,
-        allTaskData,
-        "Drupal Update"
+        "More language",
+        otherLanguage
+      );
+    }
+
+    if (blog === true) {
+      await createChecklistItem(getChecklistId, allTaskData, "Blog");
+    }
+
+    if (webshop === true) {
+      await createChecklistItem(getChecklistId, allTaskData, "Webshop");
+
+      if (paymentMethod !== "") {
+        await createChecklistItem(
+          getChecklistId,
+          allTaskData,
+          "Payment method"
+        );
+
+        if (paymentMethod === "other") {
+          await postUniqueChecklistItem(
+            getChecklistId,
+            "Other payment method(s)",
+            paymentMethodOther
+          );
+        }
+      }
+
+      if (currency !== "") {
+        await createChecklistItem(getChecklistId, allTaskData, "Currency");
+
+        if (currency === "other") {
+          await postUniqueChecklistItem(
+            getChecklistId,
+            "Other currency(s)",
+            currencyOther
+          );
+        }
+      }
+
+      if (customWebshop === true) {
+        await createChecklistItem(
+          getChecklistId,
+          allTaskData,
+          "Custom webshop"
+        );
+
+        if (customerRegistration === true) {
+          await createChecklistItem(
+            getChecklistId,
+            allTaskData,
+            "Customer registration"
+          );
+        }
+
+        if (uniqueProductVariation === true) {
+          await createChecklistItem(
+            getChecklistId,
+            allTaskData,
+            "Product variation"
+          );
+
+          if (upvAdditional !== null) {
+            await postUniqueChecklistItem(
+              getChecklistId,
+              "Additional product variation(s)",
+              upvAdditional
+            );
+          }
+        }
+
+        if (invoiceSystem === true) {
+          await createChecklistItem(
+            getChecklistId,
+            allTaskData,
+            "Invoice system"
+          );
+        }
+
+        if (stockManagement === true) {
+          await createChecklistItem(
+            getChecklistId,
+            allTaskData,
+            "Stock management"
+          );
+        }
+
+        if (stockUpdate === true) {
+          await createChecklistItem(
+            getChecklistId,
+            allTaskData,
+            "Stock update"
+          );
+        }
+
+        if (additionalCurrencies === true) {
+          await createChecklistItem(
+            getChecklistId,
+            allTaskData,
+            "Additional currencies"
+          );
+
+          if (additionalCurrenciesOther !== null) {
+            await postUniqueChecklistItem(
+              getChecklistId,
+              "Additional currency(s)",
+              additionalCurrenciesOther
+            );
+          }
+        }
+
+        if (additionalVat === true) {
+          await createChecklistItem(
+            getChecklistId,
+            allTaskData,
+            "Additional VAT"
+          );
+
+          if (additionalVatOther !== null) {
+            await postUniqueChecklistItem(
+              getChecklistId,
+              "Additional VAT(s)",
+              additionalVatOther
+            );
+          }
+        }
+
+        if (couponSystem === true) {
+          await createChecklistItem(
+            getChecklistId,
+            allTaskData,
+            "Coupon system"
+          );
+        }
+
+        if (productFilters === true) {
+          await createChecklistItem(
+            getChecklistId,
+            allTaskData,
+            "Product filters"
+          );
+
+          if (additionalFilters !== null) {
+            await postUniqueChecklistItem(
+              getChecklistId,
+              "Additional filter(s)",
+              additionalFilters
+            );
+          }
+        }
+
+        if (productPages === true) {
+          await createChecklistItem(
+            getChecklistId,
+            allTaskData,
+            "Product pages"
+          );
+        }
+
+        if (webshopFeatures !== null) {
+          await postUniqueChecklistItem(
+            getChecklistId,
+            "Additional webshop feature(s)",
+            webshopFeatures
+          );
+        }
+      }
+    }
+
+    if (extraElements === true) {
+      await createChecklistItem(getChecklistId, allTaskData, "Layout elements");
+
+      if (extraElementsOther !== null) {
+        await postUniqueChecklistItem(
+          getChecklistId,
+          "Additional layout element(s)",
+          extraElementsOther
+        );
+      }
+    }
+
+    if (flexibleLayout === true) {
+      await createChecklistItem(getChecklistId, allTaskData, "Flexible layout");
+    }
+
+    if (uniqueDesign === true) {
+      await createChecklistItem(getChecklistId, allTaskData, "Unique design");
+
+      if (uniqueDesignUrl !== null) {
+        await postUniqueChecklistItem(
+          getChecklistId,
+          "Unique URL",
+          uniqueDesignUrl
+        );
+      }
+
+      if (uniqueEmail === true) {
+        await createChecklistItem(
+          getChecklistId,
+          allTaskData,
+          "Email template"
+        );
+      }
+    }
+
+    if (extraFeatures !== null) {
+      await postUniqueChecklistItem(
+        getChecklistId,
+        "Additional site feature(s)",
+        extraFeatures
       );
     }
   }
 
-  async function createChecklistItemRecursively(
-    getChecklistId,
-    allTaskData,
-    tag
-  ) {
+  async function createChecklistItem(getChecklistId, allTaskData, tag) {
     // Filter all tasks by tag
     const filteredTask = allTaskData.filter((x) => {
       return x.taskTags.includes(tag);
     });
 
-    filteredTask.forEach((x) => {
-      // Create checklist item
-      generateChecklistItem(getChecklistId, x);
-    });
+    console.log(tag);
 
-    //createChecklistItem(getChecklistId);
+    for (const x of filteredTask) {
+      // Create checklist item
+      await postChecklistItem(getChecklistId, x);
+    }
   }
 
-  async function generateChecklistItem(getChecklistId, data) {
-    const createChecklistItem = await axios.post(
+  async function postChecklistItem(getChecklistId, data) {
+    const checklistItem = await axios.post(
       `https://api.trello.com/1/checklists/${getChecklistId}/checkItems?key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
       {
-        name:
-          data.taskShort + " --- " + config.FRONTEND_URL + "/task/" + data.id,
+        name: `${data.taskShort} --- ${config.FRONTEND_URL}/task/${data.id}`,
       }
     );
 
-    const checklistItemData = await createChecklistItem.data;
     console.log("Checklist item created");
+  }
+
+  async function postUniqueChecklistItem(getChecklistId, title, text) {
+    const checklistItem = await axios.post(
+      `https://api.trello.com/1/checklists/${getChecklistId}/checkItems?key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
+      {
+        name: `${title} - ${text}`,
+      }
+    );
+
+    console.log("Unique checklist item created");
   }
 
   // Start the function
