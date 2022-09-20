@@ -22,6 +22,8 @@ exports.apiTaskManagerForm = async function (req, res) {
     otherLanguage,
     paymentMethod,
     paymentMethodOther,
+    currency,
+    currencyOther,
     customWebshop,
     customerRegistration,
     uniqueProductVariation,
@@ -45,8 +47,9 @@ exports.apiTaskManagerForm = async function (req, res) {
     uniqueDesignUrl,
     uniqueEmail,
     extraFeatures,
-  } = req.body;
-  console.log(req.body);
+  } = req.body.values;
+
+  console.log(req.body.values);
 
   async function generateTrelloTask() {
     const getAllBoard = await axios.get(
@@ -102,14 +105,14 @@ exports.apiTaskManagerForm = async function (req, res) {
           return x.id;
         });
 
-      if (dUpdate === "true") {
+      if (dUpdate?.value === "true") {
         await createNewCard(getListId, "Drupal update");
       }
 
-      if (packages !== "") {
+      if (packages?.value !== "") {
         await createNewCard(getListId, "Install/Config Drupal");
 
-        switch (packages) {
+        switch (packages?.value) {
           case "basic":
             await createNewCard(getListId, "Basic Package");
             break;
@@ -189,19 +192,19 @@ exports.apiTaskManagerForm = async function (req, res) {
 
     switch (type) {
       case "Drupal update":
-        await createChecklistItem(getChecklistId, allTaskData, "Drupal Update");
+        await createChecklistItem(getChecklistId, allTaskData, "Drupal update");
 
-        if (ourServer === "false") {
+        if (ourServer?.value === "false") {
           await createChecklistItem(
             getChecklistId,
             allTaskData,
-            "External Server"
+            "External server"
           );
         }
-        if (dVersion !== "") {
-          if (dVersion === "d7-latest") {
+        if (dVersion?.value) {
+          if (dVersion?.value === "d7-latest") {
             await createChecklistItem(getChecklistId, allTaskData, "Drupal 7");
-          } else if (dVersion === "d8-latest") {
+          } else if (dVersion?.value === "d8-latest") {
             await createChecklistItem(getChecklistId, allTaskData, "Drupal 8");
           }
         }
@@ -213,7 +216,7 @@ exports.apiTaskManagerForm = async function (req, res) {
         await createChecklistItem(
           getChecklistId,
           allTaskData,
-          "Install Drupal"
+          "Install drupal"
         );
         break;
       case "Basic Package":
@@ -234,7 +237,7 @@ exports.apiTaskManagerForm = async function (req, res) {
   }
 
   async function packageController(getChecklistId, allTaskData) {
-    if (moreLanguage === true && otherLanguage !== null) {
+    if (moreLanguage === true && otherLanguage) {
       await postUniqueChecklistItem(
         getChecklistId,
         "More language",
@@ -249,14 +252,14 @@ exports.apiTaskManagerForm = async function (req, res) {
     if (webshop === true) {
       await createChecklistItem(getChecklistId, allTaskData, "Webshop");
 
-      if (paymentMethod !== "") {
+      if (paymentMethod?.value) {
         await createChecklistItem(
           getChecklistId,
           allTaskData,
           "Payment method"
         );
 
-        if (paymentMethod === "other") {
+        if (paymentMethod?.value === "other") {
           await postUniqueChecklistItem(
             getChecklistId,
             "Other payment method(s)",
@@ -265,10 +268,10 @@ exports.apiTaskManagerForm = async function (req, res) {
         }
       }
 
-      if (currency !== "") {
+      if (currency?.value) {
         await createChecklistItem(getChecklistId, allTaskData, "Currency");
 
-        if (currency === "other") {
+        if (currency?.value === "other") {
           await postUniqueChecklistItem(
             getChecklistId,
             "Other currency(s)",
@@ -299,7 +302,7 @@ exports.apiTaskManagerForm = async function (req, res) {
             "Product variation"
           );
 
-          if (upvAdditional !== null) {
+          if (upvAdditional) {
             await postUniqueChecklistItem(
               getChecklistId,
               "Additional product variation(s)",
@@ -339,7 +342,7 @@ exports.apiTaskManagerForm = async function (req, res) {
             "Additional currencies"
           );
 
-          if (additionalCurrenciesOther !== null) {
+          if (additionalCurrenciesOther) {
             await postUniqueChecklistItem(
               getChecklistId,
               "Additional currency(s)",
@@ -355,7 +358,7 @@ exports.apiTaskManagerForm = async function (req, res) {
             "Additional VAT"
           );
 
-          if (additionalVatOther !== null) {
+          if (additionalVatOther) {
             await postUniqueChecklistItem(
               getChecklistId,
               "Additional VAT(s)",
@@ -379,7 +382,7 @@ exports.apiTaskManagerForm = async function (req, res) {
             "Product filters"
           );
 
-          if (additionalFilters !== null) {
+          if (additionalFilters) {
             await postUniqueChecklistItem(
               getChecklistId,
               "Additional filter(s)",
@@ -396,7 +399,7 @@ exports.apiTaskManagerForm = async function (req, res) {
           );
         }
 
-        if (webshopFeatures !== null) {
+        if (webshopFeatures) {
           await postUniqueChecklistItem(
             getChecklistId,
             "Additional webshop feature(s)",
@@ -409,7 +412,7 @@ exports.apiTaskManagerForm = async function (req, res) {
     if (extraElements === true) {
       await createChecklistItem(getChecklistId, allTaskData, "Layout elements");
 
-      if (extraElementsOther !== null) {
+      if (extraElementsOther) {
         await postUniqueChecklistItem(
           getChecklistId,
           "Additional layout element(s)",
@@ -442,7 +445,8 @@ exports.apiTaskManagerForm = async function (req, res) {
       }
     }
 
-    if (extraFeatures !== null) {
+    if (extraFeatures) {
+      console.log(extraFeatures);
       await postUniqueChecklistItem(
         getChecklistId,
         "Additional site feature(s)",
