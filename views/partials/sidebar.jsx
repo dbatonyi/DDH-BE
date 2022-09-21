@@ -6,6 +6,7 @@ const Sidebar = () => (
         <div className="dashboard-menu">
             <ul className="menu">
                 <li className="menu-item"><a href="/profile">Profile</a></li>
+                <li className="menu-item"><a href="/settings">Settings</a></li>
                 <li className="menu-item"><a href="/logout">Logout</a></li>
             </ul>
         </div>

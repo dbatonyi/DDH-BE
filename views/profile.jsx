@@ -26,7 +26,7 @@ function profile(props) {
                     <div className='profile-container__permission'>
                       <p>{props.role}</p>
                     </div>
-                    <a href='/export-database'>Export tasks table (WIP)</a>
+                  <a href='/profile/edit'>Edit profile</a>
               </div>
           </div>
         </div>
