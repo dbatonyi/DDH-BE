@@ -3,6 +3,10 @@ const config = require("../config/config.json")[env];
 const bCrypt = require("bcrypt-nodejs");
 const converter = require("json-2-csv");
 const fs = require("fs");
+const express = require("express");
+const path = require("path");
+const multer = require("multer");
+const app = express();
 
 var exports = (module.exports = {});
 
@@ -83,6 +87,72 @@ exports.profileEditHandler = async function (req, res) {
   });
 };
 
+exports.resetPass = function (req, res) {
+  const { firstname, lastname, email } = req.user;
+
+  res.render("editPassword", {
+    title: "DDH Password Reset",
+    firstname,
+    lastname,
+    email,
+  });
+};
+
+exports.resetPassHandler = async function (req, res) {
+  const { User } = require("../models");
+  const { firstname, lastname, email, role } = req.user;
+  const { newPassword, reNewPassword, currPassword } = req.body;
+
+  const isValidPassword = function (userpass, password) {
+    return bCrypt.compareSync(password, userpass);
+  };
+
+  var generateHash = function (password) {
+    return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+  };
+
+  const user = await User.findOne({ where: { email: email } });
+
+  if (!isValidPassword(user.password, currPassword)) {
+    res.render("editProfile", {
+      title: "DDH User Profile",
+      firstname,
+      lastname,
+      email,
+      role,
+      systemMessage: "Password incorrect!",
+    });
+    return;
+  }
+
+  if (newPassword !== reNewPassword) {
+    res.render("editPassword", {
+      title: "DDH User Profile",
+      firstname,
+      lastname,
+      email,
+      role,
+      systemMessage: "Password not match!",
+    });
+    return;
+  }
+
+  const cryptedPassword = generateHash(newPassword);
+
+  user.password = cryptedPassword;
+
+  await user.save();
+
+  res.render("profile", {
+    title: "DDH User Profile",
+    firstname: firstname,
+    lastname: lastname,
+    email: email,
+    role,
+    systemMessage: "Profile saved!",
+  });
+};
+
 exports.settings = function (req, res) {
   res.render("settings", {
     title: "DDH Settings",
@@ -90,7 +160,6 @@ exports.settings = function (req, res) {
 };
 
 exports.exportDatabase = async function (req, res) {
-  const { firstname, lastname, email, role } = req.user;
   const { Task } = require("../models");
 
   try {
@@ -106,16 +175,79 @@ exports.exportDatabase = async function (req, res) {
       fs.writeFileSync("./dbexport/taskdatabase.csv", csv);
     });
 
-    res.render("profile", {
-      title: "DDH User Profile",
-      firstname,
-      lastname,
-      email,
-      role,
+    res.render("settings", {
+      title: "DDH Settings",
       systemMessage: "Database exported to ./dbexport/taskdatabase.csv",
     });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
+  }
+};
+
+exports.uploadCSV = function (req, res) {
+  res.render("uploadCSV", {
+    title: "DDH Upload DB",
+  });
+};
+
+exports.uploadDatabaseHandler = async function (req, res) {
+  try {
+    const storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        // Uploads is the Upload_folder_name
+        cb(null, "./dbimport");
+      },
+      filename: function (req, file, cb) {
+        cb(null, "taskdatabase.csv");
+      },
+    });
+
+    const maxSize = 10 * 1000 * 1000;
+
+    const upload = multer({
+      storage: storage,
+      limits: { fileSize: maxSize },
+      fileFilter: function (req, file, cb) {
+        // Set the filetypes, it is optional
+        const filetypes = /csv/;
+        const mimetype = filetypes.test(file.mimetype);
+
+        const extname = filetypes.test(
+          path.extname(file.originalname).toLowerCase()
+        );
+
+        if (mimetype && extname) {
+          return cb(null, true);
+        }
+
+        cb(
+          "Error: File upload only supports the " +
+            "following filetypes - " +
+            filetypes
+        );
+      },
+    }).single("dbfile");
+
+    upload(req, res, function (err) {
+      if (err) {
+        console.log(err);
+        res.render("uploadCSV", {
+          title: "DDH Upload DB",
+          systemMessage: "Upload error",
+        });
+      } else {
+        res.render("uploadCSV", {
+          title: "DDH Upload DB",
+          systemMessage: "Database imported to ./dbimport/taskdatabase.csv",
+        });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.render("uploadCSV", {
+      title: "DDH Upload DB",
+      systemMessage: "Something went wrong check",
+    });
   }
 };

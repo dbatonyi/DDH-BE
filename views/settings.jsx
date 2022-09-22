@@ -11,7 +11,9 @@ function settings(props) {
             {props.systemMessage ? <div className='system-message'>{props.systemMessage}</div> : null}
               <div className="settings-container">
                     <label>Export database</label>
-                    <a href='/export-database'>Export tasks table (WIP)</a>
+            <a href='/export-database'>Export tasks table (WIP)</a>
+            <label>Import database</label>
+                    <a href='/upload-db'>Import tasks table (WIP)</a>
               </div>
           </div>
         </div>

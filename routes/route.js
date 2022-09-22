@@ -55,9 +55,21 @@ module.exports = function (app, passport) {
 
   app.post("/profile/edit", isLoggedIn, pageController.profileEditHandler);
 
+  app.get("/profile/reset-password", isLoggedIn, pageController.resetPass);
+
+  app.post(
+    "/profile/reset-password",
+    isLoggedIn,
+    pageController.resetPassHandler
+  );
+
   app.get("/settings", isLoggedIn, pageController.settings);
 
   app.get("/export-database", isLoggedIn, pageController.exportDatabase);
+
+  app.get("/upload-db", isLoggedIn, pageController.uploadCSV);
+
+  app.post("/upload-db", isLoggedIn, pageController.uploadDatabaseHandler);
 
   // API
 

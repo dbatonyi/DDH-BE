@@ -2,7 +2,7 @@ const React = require('react');
 const MainLayout = require('./layouts/mainLayout');
 const Sidebar = require('./partials/sidebar');
  
-function profile(props) {
+function editProfile(props) {
   return (
     <MainLayout title={props.title}>
         <div className="dashboard-container">
@@ -37,4 +37,4 @@ function profile(props) {
   );
 }
  
-module.exports = profile;
+module.exports = editProfile;

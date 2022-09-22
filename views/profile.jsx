@@ -26,7 +26,8 @@ function profile(props) {
                     <div className='profile-container__permission'>
                       <p>{props.role}</p>
                     </div>
-                  <a href='/profile/edit'>Edit profile</a>
+            <a href='/profile/edit'>Edit profile</a>
+            <a href='/profile/reset-password'>New password</a>
               </div>
           </div>
         </div>
