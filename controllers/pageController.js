@@ -3,6 +3,7 @@ const config = require("../config/config.json")[env];
 const bCrypt = require("bcrypt-nodejs");
 const converter = require("json-2-csv");
 const fs = require("fs");
+const csv = require("fast-csv");
 const express = require("express");
 const path = require("path");
 const multer = require("multer");
@@ -192,10 +193,54 @@ exports.uploadCSV = function (req, res) {
 };
 
 exports.uploadDatabaseHandler = async function (req, res) {
+  async function importDatabase() {
+    const { Task } = require("../models");
+
+    // Empty table before import new data
+
+    Task.destroy({
+      where: {},
+      truncate: true,
+    });
+
+    let tasks = [];
+    let path = "./dbimport/taskdatabase.csv";
+
+    fs.createReadStream(path)
+      .pipe(csv.parse({ headers: true }))
+      .on("error", (error) => {
+        throw error.message;
+      })
+      .on("data", (row) => {
+        tasks.push(row);
+      })
+      .on("end", () => {
+        Task.bulkCreate(tasks)
+          .then(() => {
+            fs.unlink(path, (err) => {
+              if (err) {
+                console.error(err);
+                return;
+              }
+            });
+
+            res.render("uploadCSV", {
+              title: "DDH Upload DB",
+              systemMessage: "Database updated",
+            });
+          })
+          .catch((error) => {
+            res.render("uploadCSV", {
+              title: "DDH Upload DB",
+              systemMessage: "Database error",
+            });
+          });
+      });
+  }
+
   try {
     const storage = multer.diskStorage({
       destination: function (req, file, cb) {
-        // Uploads is the Upload_folder_name
         cb(null, "./dbimport");
       },
       filename: function (req, file, cb) {
@@ -209,7 +254,6 @@ exports.uploadDatabaseHandler = async function (req, res) {
       storage: storage,
       limits: { fileSize: maxSize },
       fileFilter: function (req, file, cb) {
-        // Set the filetypes, it is optional
         const filetypes = /csv/;
         const mimetype = filetypes.test(file.mimetype);
 
@@ -229,22 +273,17 @@ exports.uploadDatabaseHandler = async function (req, res) {
       },
     }).single("dbfile");
 
-    upload(req, res, function (err) {
+    upload(req, res, async function (err) {
       if (err) {
-        console.log(err);
         res.render("uploadCSV", {
           title: "DDH Upload DB",
           systemMessage: "Upload error",
         });
       } else {
-        res.render("uploadCSV", {
-          title: "DDH Upload DB",
-          systemMessage: "Database imported to ./dbimport/taskdatabase.csv",
-        });
+        await importDatabase();
       }
     });
   } catch (err) {
-    console.log(err);
     res.render("uploadCSV", {
       title: "DDH Upload DB",
       systemMessage: "Something went wrong check",
