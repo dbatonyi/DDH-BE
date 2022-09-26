@@ -10,8 +10,12 @@ function importDB(props) {
           <div className="dashboard-container__main">
             {props.systemMessage ? <div className='system-message'>{props.systemMessage}</div> : null}
                 <div className="dbimport-container">
-                      <form className="dbimport-edit-container__form" id="importDB" name="importDB" encType="multipart/form-data" method="post" action="/upload-db">
-                          <span>Upload CSV:</span>  
+            <form className="dbimport-edit-container__form" id="importDB" name="importDB" encType="multipart/form-data" method="post" action="/upload-db">
+              <input type="radio" id="append" name="importHandle" value="append" required/>
+              <label htmlFor="append">Append tasks table</label>
+              <input type="radio" id="clear" name="importHandle" value="clear" required/>
+              <label htmlFor="clear">Clear table, then import data</label>
+                          <label htmlFor="dbfile">Upload CSV:</label>  
                         <input type="file" name="dbfile" required/> 
                     <div className="dbimport-container__form--submit-btn">
                     <input className="btn" type="submit" value="Upload" />

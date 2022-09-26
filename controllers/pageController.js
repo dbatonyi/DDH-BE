@@ -164,7 +164,7 @@ exports.exportDatabase = async function (req, res) {
   const { Task } = require("../models");
 
   try {
-    const tasks = await Task.findAll();
+    const tasks = await Task.findAll({ attributes: { exclude: ["id"] } });
 
     const jsonUsers = JSON.parse(JSON.stringify(tasks));
 
@@ -197,11 +197,12 @@ exports.uploadDatabaseHandler = async function (req, res) {
     const { Task } = require("../models");
 
     // Empty table before import new data
-
-    Task.destroy({
-      where: {},
-      truncate: true,
-    });
+    if (req.body.importHandle === "clear") {
+      Task.destroy({
+        where: {},
+        truncate: true,
+      });
+    }
 
     let tasks = [];
     let path = "./dbimport/taskdatabase.csv";
