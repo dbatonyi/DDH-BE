@@ -6,7 +6,7 @@ function resetPass(props) {
   return (
     <MainLayout title={props.title}>
         <div className="dashboard-container">
-        <Sidebar />
+        <Sidebar title={props.title} role={props.role} />
           <div className="dashboard-container__main">
             {props.systemMessage ? <div className='system-message'>{props.systemMessage}</div> : null}
                 <div className="profile-container">

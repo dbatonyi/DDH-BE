@@ -33,6 +33,12 @@ module.exports = function (app, passport) {
     })(req, res, next);
   }
 
+  function permissionLevelAdmin(req, res, next) {
+    if (req.user.role === "Admin") return next();
+
+    res.redirect("/dashboard");
+  }
+
   //Auth
 
   app.get("/signup", authController.signup);
@@ -63,13 +69,33 @@ module.exports = function (app, passport) {
     pageController.resetPassHandler
   );
 
-  app.get("/settings", isLoggedIn, pageController.settings);
+  app.get(
+    "/settings",
+    isLoggedIn,
+    permissionLevelAdmin,
+    pageController.settings
+  );
 
-  app.get("/export-database", isLoggedIn, pageController.exportDatabase);
+  app.get(
+    "/export-database",
+    isLoggedIn,
+    permissionLevelAdmin,
+    pageController.exportDatabase
+  );
 
-  app.get("/upload-db", isLoggedIn, pageController.uploadCSV);
+  app.get(
+    "/upload-db",
+    isLoggedIn,
+    permissionLevelAdmin,
+    pageController.uploadCSV
+  );
 
-  app.post("/upload-db", isLoggedIn, pageController.uploadDatabaseHandler);
+  app.post(
+    "/upload-db",
+    isLoggedIn,
+    permissionLevelAdmin,
+    pageController.uploadDatabaseHandler
+  );
 
   // API
 

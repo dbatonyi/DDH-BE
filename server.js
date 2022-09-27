@@ -7,8 +7,10 @@ const flash = require("connect-flash");
 const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const bCrypt = require("bcrypt-nodejs");
 const env = process.env.NODE_ENV || "development";
 const config = require("./config/config.json")[env];
+const adminCredentials = require("./config/admin-credentials.json");
 
 //CORS
 app.use(
@@ -51,7 +53,36 @@ const models = require("./models");
 //Sync Database
 models.sequelize
   .sync()
-  .then(function () {
+  .then(async function () {
+    const users = await models.User.findAll();
+
+    if (users.length < 1) {
+      const generateHash = function (password) {
+        return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+      };
+
+      const userPassword = generateHash(adminCredentials.admin_password);
+      const regHashRow = generateHash(
+        adminCredentials.admin_email + adminCredentials.admin_password
+      );
+
+      //Remove slashes
+      const regHash = regHashRow.replace(/\//g, "");
+
+      const data = {
+        email: adminCredentials.admin_email,
+        username: adminCredentials.admin_email,
+        password: userPassword,
+        firstname: adminCredentials.admin_firstname,
+        lastname: adminCredentials.admin_lastname,
+        role: "Admin",
+        reghash: regHash,
+      };
+
+      models.User.create(data);
+
+      console.log("Admin user created!");
+    }
     console.log("Nice! Database looks fine");
   })
   .catch(function (err) {

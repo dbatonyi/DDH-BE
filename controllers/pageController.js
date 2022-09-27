@@ -17,6 +17,7 @@ exports.dashboard = function (req, res) {
   res.render("dashboard", {
     title: "DDH Dashboard",
     username: fullName,
+    role: req.user.role,
   });
 };
 
@@ -33,13 +34,14 @@ exports.profile = function (req, res) {
 };
 
 exports.profileEdit = function (req, res) {
-  const { firstname, lastname, email } = req.user;
+  const { firstname, lastname, email, role } = req.user;
 
   res.render("editProfile", {
     title: "DDH User Profile Edit",
     firstname,
     lastname,
     email,
+    role,
   });
 };
 
@@ -89,13 +91,14 @@ exports.profileEditHandler = async function (req, res) {
 };
 
 exports.resetPass = function (req, res) {
-  const { firstname, lastname, email } = req.user;
+  const { firstname, lastname, email, role } = req.user;
 
   res.render("editPassword", {
     title: "DDH Password Reset",
     firstname,
     lastname,
     email,
+    role,
   });
 };
 
@@ -189,6 +192,7 @@ exports.exportDatabase = async function (req, res) {
 exports.uploadCSV = function (req, res) {
   res.render("uploadCSV", {
     title: "DDH Upload DB",
+    role: req.user.role,
   });
 };
 

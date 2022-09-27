@@ -139,6 +139,11 @@ module.exports = function (passport, User) {
           return done(null, false);
         }
 
+        if (!["Admin", "Developer"].includes(user.role)) {
+          req.flash("errorMessagePass", "Access denied!");
+          return done(null, false);
+        }
+
         const userInfo = user.get();
         return done(null, userInfo);
       }
