@@ -157,9 +157,38 @@ exports.resetPassHandler = async function (req, res) {
   });
 };
 
+exports.users = async function (req, res) {
+  const { User } = require("../models");
+  const users = await User.findAll({ attributes: ["id", "username", "role"] });
+
+  res.render("users", {
+    title: "DDH Users",
+    users: users,
+    role: req.user.role,
+  });
+};
+
+exports.userRole = async function (req, res) {
+  const { User } = require("../models");
+
+  var userId = req.params.id;
+
+  const user = await User.findOne({
+    attributes: ["id", "username", "role"],
+    where: { id: userId },
+  });
+
+  res.render("userRole", {
+    title: "DDH User Role",
+    user: user,
+    role: req.user.role,
+  });
+};
+
 exports.settings = function (req, res) {
   res.render("settings", {
     title: "DDH Settings",
+    role: req.user.role,
   });
 };
 

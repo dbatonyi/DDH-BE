@@ -69,6 +69,10 @@ module.exports = function (app, passport) {
     pageController.resetPassHandler
   );
 
+  app.get("/users", isLoggedIn, pageController.users);
+
+  app.get("/user/role/:id", isLoggedIn, pageController.userRole);
+
   app.get(
     "/settings",
     isLoggedIn,
