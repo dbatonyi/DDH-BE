@@ -1,8 +1,0 @@
-.dashboard-container {
-  display: flex; }
-  .dashboard-container__sidebar {
-    width: 15%;
-    background-color: #8cd3ff;
-    height: 100vh; }
-  .dashboard-container__main {
-    width: 85%; }

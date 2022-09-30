@@ -3,6 +3,5 @@ dbexport/*.csv
 dbimport/*.csv
 config/config.json
 config/admin-credentials.json
-package-lock.json
 .env
 public/css/*.css

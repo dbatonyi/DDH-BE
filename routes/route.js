@@ -73,6 +73,16 @@ module.exports = function (app, passport) {
 
   app.get("/user/role/:id", isLoggedIn, pageController.userRole);
 
+  app.post(
+    "/user/edit-role/:id",
+    isLoggedIn,
+    pageController.userEditRoleHandler
+  );
+
+  app.get("/user/delete/:id", isLoggedIn, pageController.userDelete);
+
+  app.get("/remove-user/:id", isLoggedIn, pageController.userDeleteHandler);
+
   app.get(
     "/settings",
     isLoggedIn,

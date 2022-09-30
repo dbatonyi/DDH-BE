@@ -171,7 +171,7 @@ exports.users = async function (req, res) {
 exports.userRole = async function (req, res) {
   const { User } = require("../models");
 
-  var userId = req.params.id;
+  const userId = req.params.id;
 
   const user = await User.findOne({
     attributes: ["id", "username", "role"],
@@ -183,6 +183,58 @@ exports.userRole = async function (req, res) {
     user: user,
     role: req.user.role,
   });
+};
+
+exports.userEditRoleHandler = async function (req, res) {
+  const { User } = require("../models");
+
+  const userId = req.params.id;
+  const role = req.body.newRole;
+
+  const user = await User.update(
+    {
+      role,
+    },
+    { where: { id: userId } }
+  );
+
+  res.redirect("/users");
+};
+
+exports.userDelete = async function (req, res) {
+  const { User } = require("../models");
+
+  const userId = req.params.id;
+
+  const user = await User.findOne({
+    attributes: ["uuid", "username", "role"],
+    where: { id: userId },
+  });
+
+  res.render("userDelete", {
+    title: "DDH Delete User",
+    user: user,
+  });
+};
+
+exports.userDeleteHandler = async function (req, res) {
+  const { User } = require("../models");
+
+  const userUuid = req.params.id;
+
+  const user = await User.findOne({ where: { uuid: userUuid } });
+
+  if (user) {
+    await user.destroy();
+
+    if (userUuid === req.user.uuid) {
+      req.session.destroy(function (err) {
+        res.redirect("/");
+      });
+    } else {
+      res.redirect("/users");
+    }
+  }
 };
 
 exports.settings = function (req, res) {
