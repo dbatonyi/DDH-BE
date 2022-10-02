@@ -35,6 +35,7 @@ exports.profile = function (req, res) {
 
 exports.profileEdit = function (req, res) {
   const { firstname, lastname, email, role } = req.user;
+  const systemMessage = req.flash("systemMessage");
 
   res.render("editProfile", {
     title: "DDH User Profile Edit",
@@ -42,12 +43,12 @@ exports.profileEdit = function (req, res) {
     lastname,
     email,
     role,
+    systemMessage,
   });
 };
 
 exports.profileEditHandler = async function (req, res) {
   const { User } = require("../models");
-  const { firstname, lastname, email, role } = req.user;
   const { fname, lname, userEmail, password } = req.body;
 
   const isValidPassword = function (userpass, password) {
@@ -57,14 +58,9 @@ exports.profileEditHandler = async function (req, res) {
   const user = await User.findOne({ where: { email: req.user.email } });
 
   if (!isValidPassword(user.password, password)) {
-    res.render("editProfile", {
-      title: "DDH User Profile",
-      firstname,
-      lastname,
-      email,
-      role,
-      systemMessage: "Password incorrect!",
-    });
+    req.flash("systemMessage", "Incorrect password.");
+
+    res.redirect("/profile/edit");
     return;
   }
 
@@ -80,18 +76,15 @@ exports.profileEditHandler = async function (req, res) {
 
   await user.save();
 
-  res.render("profile", {
-    title: "DDH User Profile",
-    firstname: fname ? fname : firstname,
-    lastname: lname ? lname : lastname,
-    email: userEmail ? userEmail : email,
-    role,
-    systemMessage: "Profile saved!",
-  });
+  req.flash("systemMessage", "Profile saved!");
+
+  res.redirect("/profile/edit");
+  return;
 };
 
 exports.resetPass = function (req, res) {
   const { firstname, lastname, email, role } = req.user;
+  const systemMessage = req.flash("systemMessage");
 
   res.render("editPassword", {
     title: "DDH Password Reset",
@@ -99,12 +92,12 @@ exports.resetPass = function (req, res) {
     lastname,
     email,
     role,
+    systemMessage,
   });
 };
 
 exports.resetPassHandler = async function (req, res) {
   const { User } = require("../models");
-  const { firstname, lastname, email, role } = req.user;
   const { newPassword, reNewPassword, currPassword } = req.body;
 
   const isValidPassword = function (userpass, password) {
@@ -115,29 +108,19 @@ exports.resetPassHandler = async function (req, res) {
     return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
   };
 
-  const user = await User.findOne({ where: { email: email } });
+  const user = await User.findOne({ where: { email: req.user.email } });
 
   if (!isValidPassword(user.password, currPassword)) {
-    res.render("editProfile", {
-      title: "DDH User Profile",
-      firstname,
-      lastname,
-      email,
-      role,
-      systemMessage: "Password incorrect!",
-    });
+    req.flash("systemMessage", "Password incorrect!");
+
+    res.redirect("/profile/reset-password");
     return;
   }
 
   if (newPassword !== reNewPassword) {
-    res.render("editPassword", {
-      title: "DDH User Profile",
-      firstname,
-      lastname,
-      email,
-      role,
-      systemMessage: "Password not match!",
-    });
+    req.flash("systemMessage", "Password not match!");
+
+    res.redirect("/profile/reset-password");
     return;
   }
 
@@ -147,14 +130,10 @@ exports.resetPassHandler = async function (req, res) {
 
   await user.save();
 
-  res.render("profile", {
-    title: "DDH User Profile",
-    firstname: firstname,
-    lastname: lastname,
-    email: email,
-    role,
-    systemMessage: "Profile saved!",
-  });
+  req.flash("systemMessage", "Profile saved!");
+
+  res.redirect("/profile/edit");
+  return;
 };
 
 exports.users = async function (req, res) {
@@ -171,6 +150,8 @@ exports.users = async function (req, res) {
 exports.userRole = async function (req, res) {
   const { User } = require("../models");
 
+  const systemMessage = req.flash("systemMessage");
+
   const userId = req.params.id;
 
   const user = await User.findOne({
@@ -182,6 +163,7 @@ exports.userRole = async function (req, res) {
     title: "DDH User Role",
     user: user,
     role: req.user.role,
+    systemMessage,
   });
 };
 
@@ -198,7 +180,10 @@ exports.userEditRoleHandler = async function (req, res) {
     { where: { id: userId } }
   );
 
+  req.flash("systemMessage", `${user.username} role updated!`);
+
   res.redirect("/users");
+  return;
 };
 
 exports.userDelete = async function (req, res) {
@@ -232,15 +217,21 @@ exports.userDeleteHandler = async function (req, res) {
         res.redirect("/");
       });
     } else {
+      req.flash("systemMessage", `${user.username} deleted!`);
+
       res.redirect("/users");
+      return;
     }
   }
 };
 
 exports.settings = function (req, res) {
+  const systemMessage = req.flash("systemMessage");
+
   res.render("settings", {
     title: "DDH Settings",
     role: req.user.role,
+    systemMessage,
   });
 };
 
@@ -260,20 +251,28 @@ exports.exportDatabase = async function (req, res) {
       fs.writeFileSync("./dbexport/taskdatabase.csv", csv);
     });
 
-    res.render("settings", {
-      title: "DDH Settings",
-      systemMessage: "Database exported to ./dbexport/taskdatabase.csv",
-    });
+    req.flash(
+      "systemMessage",
+      "Database exported to /dbexport/taskdatabase.csv"
+    );
+
+    res.redirect("/settings");
+    return;
   } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
+    req.flash("systemMessage", "Database error! ErrorCode: 40");
+
+    res.redirect("/settings");
+    return;
   }
 };
 
 exports.uploadCSV = function (req, res) {
+  const systemMessage = req.flash("systemMessage");
+
   res.render("uploadCSV", {
     title: "DDH Upload DB",
     role: req.user.role,
+    systemMessage,
   });
 };
 
@@ -310,16 +309,16 @@ exports.uploadDatabaseHandler = async function (req, res) {
               }
             });
 
-            res.render("uploadCSV", {
-              title: "DDH Upload DB",
-              systemMessage: "Database updated",
-            });
+            req.flash("systemMessage", "Database updated");
+
+            res.redirect("/upload-db");
+            return;
           })
           .catch((error) => {
-            res.render("uploadCSV", {
-              title: "DDH Upload DB",
-              systemMessage: "Database error",
-            });
+            req.flash("systemMessage", "Database error! ErrorCode: 40");
+
+            res.redirect("/upload-db");
+            return;
           });
       });
   }
@@ -361,18 +360,18 @@ exports.uploadDatabaseHandler = async function (req, res) {
 
     upload(req, res, async function (err) {
       if (err) {
-        res.render("uploadCSV", {
-          title: "DDH Upload DB",
-          systemMessage: "Upload error",
-        });
+        req.flash("systemMessage", "Upload error! ErrorCode: 30");
+
+        res.redirect("/upload-db");
+        return;
       } else {
         await importDatabase();
       }
     });
   } catch (err) {
-    res.render("uploadCSV", {
-      title: "DDH Upload DB",
-      systemMessage: "Something went wrong check",
-    });
+    req.flash("systemMessage", "Something went wrong! ErrorCode: 50");
+
+    res.redirect("/upload-db");
+    return;
   }
 };
