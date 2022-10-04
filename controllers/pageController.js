@@ -137,12 +137,34 @@ exports.resetPassHandler = async function (req, res) {
 };
 
 exports.users = async function (req, res) {
+  function paginate(array, page_size, page_number) {
+    return array.slice((page_number - 1) * page_size, page_number * page_size);
+  }
+
+  let page = req.query.page;
+  let sort = req.query.sort;
+
+  if (!["asc", "desc"].includes(sort)) {
+    sort = "asc";
+  }
+
+  if (!page) {
+    page = 1;
+  }
+
+  const pageSize = 1;
+
   const { User } = require("../models");
-  const users = await User.findAll({ attributes: ["id", "username", "role"] });
+  const users = await User.findAll({
+    attributes: ["id", "username", "role"],
+    order: [["username", sort]],
+  });
+
+  const paginatedUserList = paginate(users, pageSize, page);
 
   res.render("users", {
     title: "DDH Users",
-    users: users,
+    users: paginatedUserList,
     role: req.user.role,
   });
 };

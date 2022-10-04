@@ -3,6 +3,8 @@ const MainLayout = require("./layouts/mainLayout");
 const Sidebar = require("./partials/sidebar");
 
 function users(props) {
+  const usersData = props.users;
+
   return (
     <MainLayout title={props.title}>
       <div className="dashboard-container">
@@ -15,13 +17,15 @@ function users(props) {
             <table className="sortable" id="userTable">
               <thead>
                 <tr>
-                  <th className="order-by-desc">User</th>
+                  <th className="order-by">
+                    <a href="?sort=desc">User</a>
+                  </th>
                   <th className="sorttable_nosort">Role</th>
                   <th className="sorttable_nosort">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(props.users).map((item, i) => {
+                {Object.entries(usersData).map((item, i) => {
                   return (
                     <tr key={i}>
                       <td>{item[1].dataValues.username}</td>
