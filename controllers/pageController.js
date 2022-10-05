@@ -152,7 +152,7 @@ exports.users = async function (req, res) {
     page = 1;
   }
 
-  const pageSize = 1;
+  const pageSize = 10;
 
   const { User } = require("../models");
   const users = await User.findAll({
@@ -162,9 +162,13 @@ exports.users = async function (req, res) {
 
   const paginatedUserList = paginate(users, pageSize, page);
 
+  const listLength = users.length / pageSize;
+
   res.render("users", {
     title: "DDH Users",
     users: paginatedUserList,
+    listLength,
+    page,
     role: req.user.role,
   });
 };

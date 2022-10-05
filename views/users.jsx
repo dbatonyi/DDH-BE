@@ -4,6 +4,7 @@ const Sidebar = require("./partials/sidebar");
 
 function users(props) {
   const usersData = props.users;
+  const page = props.page;
 
   return (
     <MainLayout title={props.title}>
@@ -14,12 +15,14 @@ function users(props) {
             <div className="system-message">{props.systemMessage}</div>
           ) : null}
           <div className="users-container">
-            <table className="sortable" id="userTable">
+            <table
+              className="sortable"
+              id="userTable"
+              data-size={props.listLength}
+            >
               <thead>
                 <tr>
-                  <th className="order-by">
-                    <a href="?sort=desc">User</a>
-                  </th>
+                  <th className="order-by">User</th>
                   <th className="sorttable_nosort">Role</th>
                   <th className="sorttable_nosort">Actions</th>
                 </tr>
@@ -47,6 +50,27 @@ function users(props) {
                 })}
               </tbody>
             </table>
+            <div className="pagination">
+              {page && page > 1 ? (
+                <div className="pagination--prev">Prev</div>
+              ) : null}
+              <div className="pagination__container">
+                {props.listLength > 1
+                  ? [...Array(props.listLength)].map((x, i) => (
+                      <div
+                        key={i + 1}
+                        page-number={i + 1}
+                        className="pagination__container--number"
+                      >
+                        {i + 1}
+                      </div>
+                    ))
+                  : null}
+              </div>
+              {page < props.listLength ? (
+                <div className="pagination--next">Next</div>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
