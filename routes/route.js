@@ -1,6 +1,3 @@
-const env = process.env.NODE_ENV || "development";
-const config = require("../config/config.json")[env];
-
 var authController = require("../controllers/authController.js");
 var pageController = require("../controllers/pageController.js");
 var apiController = require("../controllers/apiController.js");

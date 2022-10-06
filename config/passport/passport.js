@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer");
 const hbs = require("nodemailer-express-handlebars");
 const env = process.env.NODE_ENV || "development";
 const config = require("../config.json")[env];
+const appConfig = require("../../app-config.json")["variables"];
 
 module.exports = function (passport, User) {
   const LocalStrategy = require("passport-local").Strategy;
@@ -21,7 +22,7 @@ module.exports = function (passport, User) {
       async function (req, email, password, done) {
         function createNewUser(data) {
           User.create(data).then(function (newUser, created) {
-            console.log(config.HOST + ":5000/login");
+            console.log(config.host + ":5000/login");
 
             const options = {
               viewEngine: {
@@ -35,13 +36,13 @@ module.exports = function (passport, User) {
             };
 
             const transporter = nodemailer.createTransport({
-              host: config.SMTPHOST,
+              host: appConfig.smtpHost,
               port: 465,
               service: "yahoo",
               secure: false,
               auth: {
-                user: config.SMTPEMAIL,
-                pass: config.SMTPPASSWORD,
+                user: appConfig.smtpEmail,
+                pass: appConfig.smtpPassword,
               },
               logger: true,
             });
@@ -49,13 +50,13 @@ module.exports = function (passport, User) {
             transporter.use("compile", hbs(options));
             transporter.sendMail(
               {
-                from: config.SMTPEMAIL,
+                from: appConfig.smtpEmail,
                 to: data.email,
                 subject: "DDH registration!",
                 template: "registration",
                 context: {
                   user: data.firstname + " " + data.lastname,
-                  url: config.HOST + ":5000/login",
+                  url: config.host + ":5000/login",
                 },
               },
               function (error, response) {

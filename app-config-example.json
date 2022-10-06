@@ -1,0 +1,20 @@
+{
+    "variables": {
+        "frontendUrl": "http://localhost:3000",
+        "smtpHost": "smtp.mail.yahoo.com",
+        "smtpEmail": "smtpemail@yahoo.com",
+        "smtpPassword": "smptpassword",
+        "jwtkey": "secretkey",
+        "trelloApiKey": "apikey",
+        "trelloApiToken": "apitoken",
+        "trelloBoardName": "DDH Project",
+        "trelloListName": "To Do"
+    },
+    "adminCredentials": {
+        "adminUsername": "admin",
+        "adminFirstname": "Don",
+        "adminLastname": "Jhon",
+        "adminEmail": "admin@admin.com",
+        "adminPassword": "admin"
+    }
+}

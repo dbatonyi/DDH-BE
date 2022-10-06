@@ -1,7 +1,6 @@
 const axios = require("axios");
 
-const env = process.env.NODE_ENV || "development";
-const config = require("../config/config.json")[env];
+const appConfig = require("../app-config.json")["variables"];
 
 var exports = (module.exports = {});
 
@@ -53,12 +52,12 @@ exports.apiTaskManagerForm = async function (req, res) {
 
   async function generateTrelloTask() {
     const getAllBoard = await axios.get(
-      `https://api.trello.com/1/members/me/boards?key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`
+      `https://api.trello.com/1/members/me/boards?key=${appConfig.trelloApiKey}&token=${appConfig.trelloApiToken}`
     );
     const boardsData = await getAllBoard.data;
 
     const checkBoardExist = boardsData.find(
-      (board) => board.name === config.TRELLO_BOARD_NAME
+      (board) => board.name === appConfig.trelloBoardName
     );
 
     if (checkBoardExist) {
@@ -70,9 +69,9 @@ exports.apiTaskManagerForm = async function (req, res) {
 
   async function createNewBoard() {
     const createBoard = await axios.post(
-      `https://api.trello.com/1/boards?key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
+      `https://api.trello.com/1/boards?key=${appConfig.trelloApiKey}&token=${appConfig.trelloApiToken}`,
       {
-        name: config.TRELLO_BOARD_NAME,
+        name: appConfig.trelloBoardName,
         desc: "This is a board for DDH Project",
       }
     );
@@ -84,23 +83,23 @@ exports.apiTaskManagerForm = async function (req, res) {
 
   async function checkBoardList(boardsData) {
     const getBoardId = boardsData
-      .filter((x) => x.name === config.TRELLO_BOARD_NAME)
+      .filter((x) => x.name === appConfig.trelloBoardName)
       .map((x) => {
         return x.id;
       });
 
     const getBoardList = await axios.get(
-      `https://api.trello.com/1/boards/${getBoardId[0]}/lists?key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`
+      `https://api.trello.com/1/boards/${getBoardId[0]}/lists?key=${appConfig.trelloApiKey}&token=${appConfig.trelloApiToken}`
     );
     const boardListData = await getBoardList.data;
 
     const checkListExist = boardListData.find(
-      (board) => board.name === config.TRELLO_LIST_NAME
+      (board) => board.name === appConfig.trelloListName
     );
 
     if (checkListExist) {
       const getListId = boardListData
-        .filter((x) => x.name === config.TRELLO_LIST_NAME)
+        .filter((x) => x.name === appConfig.trelloListName)
         .map((x) => {
           return x.id;
         });
@@ -133,7 +132,7 @@ exports.apiTaskManagerForm = async function (req, res) {
 
   async function createNewList(getBoardId) {
     const createList = await axios.post(
-      `https://api.trello.com/1/boards/${getBoardId[0]}/lists?name=${config.TRELLO_LIST_NAME}&key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`
+      `https://api.trello.com/1/boards/${getBoardId[0]}/lists?name=${appConfig.trelloListName}&key=${appConfig.trelloApiKey}&token=${appConfig.trelloApiToken}`
     );
 
     console.log("List created");
@@ -146,7 +145,7 @@ exports.apiTaskManagerForm = async function (req, res) {
       oldUrl ? "Old site: " + oldUrl : ""
     }`;
     const createCard = await axios.post(
-      `https://api.trello.com/1/cards/?idList=${getListId[0]}&key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
+      `https://api.trello.com/1/cards/?idList=${getListId[0]}&key=${appConfig.trelloApiKey}&token=${appConfig.trelloApiToken}`,
       {
         name: `${title} - ${type}`,
         desc: cardDescription,
@@ -164,7 +163,7 @@ exports.apiTaskManagerForm = async function (req, res) {
 
   async function createChecklist(getCardId, type) {
     const createChecklist = await axios.post(
-      `https://api.trello.com/1/cards/${getCardId}/checklists?key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
+      `https://api.trello.com/1/cards/${getCardId}/checklists?key=${appConfig.trelloApiKey}&token=${appConfig.trelloApiToken}`,
       {
         name: "Checklist",
       }
@@ -471,9 +470,9 @@ exports.apiTaskManagerForm = async function (req, res) {
 
   async function postChecklistItem(getChecklistId, data) {
     const checklistItem = await axios.post(
-      `https://api.trello.com/1/checklists/${getChecklistId}/checkItems?key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
+      `https://api.trello.com/1/checklists/${getChecklistId}/checkItems?key=${appConfig.trelloApiKey}&token=${appConfig.trelloApiToken}`,
       {
-        name: `${data.taskShort} --- ${config.FRONTEND_URL}/task/${data.id}`,
+        name: `${data.taskShort} --- ${appConfig.frontendUrl}/task/${data.id}`,
       }
     );
 
@@ -482,7 +481,7 @@ exports.apiTaskManagerForm = async function (req, res) {
 
   async function postUniqueChecklistItem(getChecklistId, title, text) {
     const checklistItem = await axios.post(
-      `https://api.trello.com/1/checklists/${getChecklistId}/checkItems?key=${config.TRELLO_API_KEY}&token=${config.TRELLO_API_TOKEN}`,
+      `https://api.trello.com/1/checklists/${getChecklistId}/checkItems?key=${appConfig.trelloApiKey}&token=${appConfig.trelloApiToken}`,
       {
         name: `${title} - ${text}`,
       }

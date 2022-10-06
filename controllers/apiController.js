@@ -2,7 +2,7 @@ const bCrypt = require("bcrypt-nodejs");
 const nodemailer = require("nodemailer");
 const hbs = require("nodemailer-express-handlebars");
 const env = process.env.NODE_ENV || "development";
-const config = require("../config/config.json")[env];
+const appConfig = require("../app-config.json")["variables"];
 const jwt = require("jsonwebtoken");
 
 var exports = (module.exports = {});
@@ -27,13 +27,13 @@ exports.apiRegister = async function (req, res) {
       };
 
       const transporter = nodemailer.createTransport({
-        host: config.SMPTHOST,
+        host: appConfig.smtpHost,
         port: 465,
         service: "yahoo",
         secure: false,
         auth: {
-          user: config.SMTPEMAIL,
-          pass: config.SMTPPASSWORD,
+          user: appConfig.smtpEmail,
+          pass: appConfig.smtpPassword,
         },
         logger: true,
       });
@@ -41,7 +41,7 @@ exports.apiRegister = async function (req, res) {
       transporter.use("compile", hbs(options));
       transporter.sendMail(
         {
-          from: config.SMTPEMAIL,
+          from: appConfig.smtpEmail,
           to: data.email,
           subject: "DDH registration!",
           template: "registration",
@@ -129,13 +129,13 @@ exports.apiNewPassHandler = async function (req, res) {
         };
 
         var transporter = nodemailer.createTransport({
-          host: config.SMTPHOST,
+          host: appConfig.smtpHost,
           port: 465,
           service: "yahoo",
           secure: false,
           auth: {
-            user: config.SMTPEMAIL,
-            pass: config.SMTPPASSWORD,
+            user: appConfig.smtpEmail,
+            pass: appConfig.smtpPassword,
           },
           logger: true,
         });
@@ -143,7 +143,7 @@ exports.apiNewPassHandler = async function (req, res) {
         transporter.use("compile", hbs(options));
         transporter.sendMail(
           {
-            from: config.SMTPEMAIL,
+            from: appConfig.smtpEmail,
             to: userEmail,
             subject: "DDH Reset password!",
             template: "passreset",
@@ -235,7 +235,7 @@ exports.apiLogin = async function (req, res) {
   //Gerenate an access token
 
   const generateAccessToken = (user) => {
-    return jwt.sign({ id: user.id, role: user.role }, config.jwtkey, {
+    return jwt.sign({ id: user.id, role: user.role }, appConfig.jwtkey, {
       expiresIn: "15m",
     });
   };
@@ -256,7 +256,7 @@ exports.apiUser = async function (req, res) {
   try {
     const cookie = req.cookies["jwt"];
 
-    const claims = jwt.verify(cookie, config.jwtkey);
+    const claims = jwt.verify(cookie, appConfig.jwtkey);
 
     if (!claims) {
       res.json({

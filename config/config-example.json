@@ -1,50 +1,23 @@
 {
   "development": {
-    "USERNAME": "root",
-    "PASSWORD": "",
-    "DATABASE": "db_name",
-    "HOST": "127.0.0.1",
-    "dialect": "mariadb",
-    "FRONTEND_URL": "http://localhost:3000",
-    "SMTPHOST": "smtp.mail.yahoo.com",
-    "SMTPEMAIL": "smtpemail@yahoo.com",
-    "SMTPPASSWORD": "smptpassword",
-    "jwtkey": "secretkey",
-    "TRELLO_API_KEY": "apikey",
-    "TRELLO_API_TOKEN": "apitoken",
-    "TRELLO_BOARD_NAME": "DDH Project",
-    "TRELLO_LIST_NAME": "To Do"
+    "username": "root",
+    "password": "",
+    "database": "db_name",
+    "host": "127.0.0.1",
+    "dialect": "mariadb"
   },
   "test": {
-    "USERNAME": "root",
-    "PASSWORD": "",
-    "DATABASE": "db_name",
-    "HOST": "127.0.0.1",
-    "dialect": "mariadb",
-    "FRONTEND_URL": "http://localhost:3000",
-    "SMTPHOST": "smtp.mail.yahoo.com",
-    "SMTPEMAIL": "smtpemail@yahoo.com",
-    "SMTPPASSWORD": "smptpassword",
-    "jwtkey": "secretkey",
-    "TRELLO_API_KEY": "apikey",
-    "TRELLO_API_TOKEN": "apitoken",
-    "TRELLO_BOARD_NAME": "DDH Project",
-    "TRELLO_LIST_NAME": "To Do"
+    "username": "root",
+    "password": "",
+    "database": "db_name",
+    "host": "127.0.0.1",
+    "dialect": "mariadb"
   },
   "production": {
-    "USERNAME": "root",
-    "PASSWORD": "",
-    "DATABASE": "db_name",
-    "HOST": "127.0.0.1",
-    "dialect": "mariadb",
-    "FRONTEND_URL": "http://localhost:3000",
-    "SMTPHOST": "smtp.mail.yahoo.com",
-    "SMTPEMAIL": "smtpemail@yahoo.com",
-    "SMTPPASSWORD": "smptpassword",
-    "jwtkey": "secretkey",
-    "TRELLO_API_KEY": "apikey",
-    "TRELLO_API_TOKEN": "apitoken",
-    "TRELLO_BOARD_NAME": "DDH Project",
-    "TRELLO_LIST_NAME": "To Do"
+    "username": "root",
+    "password": "",
+    "database": "db_name",
+    "host": "127.0.0.1",
+    "dialect": "mariadb"
   }
 }

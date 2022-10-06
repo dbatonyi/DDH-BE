@@ -1,6 +1,6 @@
 {
   "name": "DDH-project",
-  "version": "0.9.8",
+  "version": "0.9.9a",
   "scripts": {
     "start": "cross-env NODE_ENV=development node server.js",
     "build": "cross-env node-sass public/scss -o public/css"

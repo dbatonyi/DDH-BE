@@ -1,5 +1,3 @@
-const env = process.env.NODE_ENV || "development";
-const config = require("../config/config.json")[env];
 const bCrypt = require("bcrypt-nodejs");
 const converter = require("json-2-csv");
 const fs = require("fs");

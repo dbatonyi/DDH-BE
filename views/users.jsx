@@ -55,17 +55,25 @@ function users(props) {
                 <div className="pagination--prev">Prev</div>
               ) : null}
               <div className="pagination__container">
-                {props.listLength > 1
-                  ? [...Array(props.listLength)].map((x, i) => (
-                      <div
-                        key={i + 1}
-                        page-number={i + 1}
-                        className="pagination__container--number"
-                      >
-                        {i + 1}
-                      </div>
-                    ))
-                  : null}
+                {props.listLength > 1 ? (
+                  [...Array(props.listLength)].map((x, i) => (
+                    <div
+                      key={i + 1}
+                      page-number={i + 1}
+                      className="pagination__container--number"
+                    >
+                      {i + 1}
+                    </div>
+                  ))
+                ) : (
+                  <div
+                    key={1}
+                    page-number={1}
+                    className="pagination__container--number--disabled"
+                  >
+                    1
+                  </div>
+                )}
               </div>
               {page < props.listLength ? (
                 <div className="pagination--next">Next</div>
