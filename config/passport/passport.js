@@ -145,6 +145,11 @@ module.exports = function (passport, User) {
           return done(null, false);
         }
 
+        if (user.status === "inactive") {
+          req.flash("errorMessageEmail", "Please activate your account first!");
+          return done(null, false);
+        }
+
         const userInfo = user.get();
         return done(null, userInfo);
       }

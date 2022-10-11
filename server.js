@@ -48,11 +48,10 @@ app.get("/", function (req, res) {
 //Models
 const models = require("./models");
 
-//Sync Database
-models.sequelize
-  .sync()
-  .then(async function () {
-    const users = await models.User.findAll();
+//Functions
+
+async function createAdmin() {
+  const users = await models.User.findAll();
 
     if (users.length < 1) {
       const generateHash = function (password) {
@@ -76,6 +75,7 @@ models.sequelize
         password: userPassword,
         firstname: appConfig.adminCredentials.adminFirstname,
         lastname: appConfig.adminCredentials.adminLastname,
+        status: "active",
         role: "Admin",
         reghash: regHash,
       };
@@ -85,6 +85,28 @@ models.sequelize
       console.log("Admin user created!");
     }
     console.log("Nice! Database looks fine");
+    return;
+}
+
+async function cleanUpDB() {
+  const users = await models.User.findAll();
+
+  const getTwoMonthAgoDate = new Date();
+
+  if(users.createdAt < getTwoMonthAgoDate && users.status === "inactive") {
+    // delete user
+
+    return;
+  }
+
+  console.log("Database cleaned!")
+}
+
+//Sync Database
+models.sequelize
+  .sync()
+  .then(function () {
+    createAdmin();
   })
   .catch(function (err) {
     console.log(err, "Something went wrong with the Database Update!");

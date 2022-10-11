@@ -1,6 +1,6 @@
 {
   "name": "DDH-project",
-  "version": "0.9.9a",
+  "version": "0.9.94",
   "scripts": {
     "start": "cross-env NODE_ENV=development node server.js",
     "build": "cross-env node-sass public/scss -o public/css"
@@ -29,8 +29,8 @@
     "nodemailer-express-handlebars": "^5.0.0",
     "passport": "^0.5.2",
     "passport-local": "^1.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "sequelize": "^6.17.0"
   }
 }

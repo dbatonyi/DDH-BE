@@ -210,6 +210,28 @@ exports.apiResetPasswordHandler = async function (req, res) {
   }
 };
 
+exports.accountConfirm = async function (req, res) {
+  const { User } = require("../models");
+
+  var regHash = req.params.id;
+  console.log(regHash);
+
+  const user = await User.findOne({ where: { reghash: regHash } });
+
+  if(!user) {
+    res.json({ status: "Account not found!" });
+  return;
+  }
+  
+  const updateUser = await User.update(
+    { status: "active" },
+    { where: { reghash: regHash } });
+
+  res.json({ status: "Account activated!" });
+  return;
+  
+}
+
 exports.apiLogin = async function (req, res) {
   const { User } = require("../models");
   const { email, password } = req.body;
@@ -227,6 +249,11 @@ exports.apiLogin = async function (req, res) {
 
   if (!isValidPassword(user.password, password)) {
     res.status(401).send({ message: "Incorrect password." });
+    return;
+  }
+
+  if (user.status === "inactive") {
+    res.status(401).send({ message: "Your account inactive, please active!" });
     return;
   }
 
