@@ -48,8 +48,8 @@ exports.apiRegister = async function (req, res) {
           context: {
             user: data.firstname + " " + data.lastname,
             url: originUrl,
-            activationUrl: config.host + `:5000/api/account-confirm/${data.regHash}`,
-            redirectParam: "fe"
+            activationUrl:
+              config.host + `:5000/api/account-confirm/${data.regHash}`,
           },
         },
         function (error, response) {
