@@ -1,3 +1,5 @@
+const appConfig = require("../app-config.json")["variables"];
+
 var exports = module.exports = {}
  
 exports.signup = function (req, res) {
@@ -12,6 +14,36 @@ exports.signup = function (req, res) {
     });
     
 }
+
+exports.accountConfirm = async function (req, res) {
+    const { User } = require("../models");
+  
+    var regHash = req.params.id;
+    let redirectParam = req.query.redirectParam;
+  
+    const user = await User.findOne({ where: { reghash: regHash } });
+  
+    if(!user) {
+      res.json({ status: "Account not found!" });
+      return;
+    }
+    
+    const updateUser = await User.update(
+      { status: "active" },
+      { where: { reghash: regHash } });
+
+    if(redirectParam === "be"){
+        res.redirect('/');
+    }
+
+    if(redirectParam === "fe"){
+        window.location.replace(appConfig.frontendUrl + "/login");
+    }
+  
+    res.json({ status: "Account activated!" });
+    return;
+    
+  }
 
 exports.signin = function(req, res) {
  

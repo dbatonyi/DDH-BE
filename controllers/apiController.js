@@ -48,6 +48,8 @@ exports.apiRegister = async function (req, res) {
           context: {
             user: data.firstname + " " + data.lastname,
             url: originUrl,
+            activationUrl: config.host + `:5000/api/account-confirm/${data.regHash}`,
+            redirectParam: "fe"
           },
         },
         function (error, response) {
@@ -209,28 +211,6 @@ exports.apiResetPasswordHandler = async function (req, res) {
     return;
   }
 };
-
-exports.accountConfirm = async function (req, res) {
-  const { User } = require("../models");
-
-  var regHash = req.params.id;
-  console.log(regHash);
-
-  const user = await User.findOne({ where: { reghash: regHash } });
-
-  if(!user) {
-    res.json({ status: "Account not found!" });
-  return;
-  }
-  
-  const updateUser = await User.update(
-    { status: "active" },
-    { where: { reghash: regHash } });
-
-  res.json({ status: "Account activated!" });
-  return;
-  
-}
 
 exports.apiLogin = async function (req, res) {
   const { User } = require("../models");

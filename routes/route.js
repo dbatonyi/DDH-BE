@@ -116,7 +116,7 @@ module.exports = function (app, passport) {
 
   app.post("/api/password/reset/:id", apiController.apiResetPasswordHandler);
 
-  app.get("/api/account-confirm/:id", apiController.accountConfirm);
+  app.get("/api/account-confirm/:id", authController.accountConfirm);
 
   app.post("/api/login", apiController.apiLogin);
 

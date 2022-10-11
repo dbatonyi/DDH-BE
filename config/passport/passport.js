@@ -56,7 +56,9 @@ module.exports = function (passport, User) {
                 template: "registration",
                 context: {
                   user: data.firstname + " " + data.lastname,
-                  url: config.host + ":5000/login",
+                  loginUrl: config.host + ":5000/login",
+                  activationUrl: config.host + `:5000/api/account-confirm/${data.regHash}`,
+                  redirectParam: "be"
                 },
               },
               function (error, response) {
