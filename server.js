@@ -51,71 +51,70 @@ const models = require("./models");
 //Functions
 
 async function createAdmin(users) {
+  if (users.length < 1) {
+    const generateHash = function (password) {
+      return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+    };
 
-    if (users.length < 1) {
-      const generateHash = function (password) {
-        return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
-      };
-
-      const userPassword = generateHash(
+    const userPassword = generateHash(appConfig.adminCredentials.adminPassword);
+    const regHashRow = generateHash(
+      appConfig.adminCredentials.adminEmail +
         appConfig.adminCredentials.adminPassword
-      );
-      const regHashRow = generateHash(
-        appConfig.adminCredentials.adminEmail +
-          appConfig.adminCredentials.adminPassword
-      );
+    );
 
-      //Remove slashes
-      const regHash = regHashRow.replace(/\//g, "");
+    //Remove slashes
+    const regHash = regHashRow.replace(/\//g, "");
 
-      const data = {
-        email: appConfig.adminCredentials.adminEmail,
-        username: appConfig.adminCredentials.adminEmail,
-        password: userPassword,
-        firstname: appConfig.adminCredentials.adminFirstname,
-        lastname: appConfig.adminCredentials.adminLastname,
-        status: "active",
-        role: "Admin",
-        reghash: regHash,
-      };
+    const data = {
+      email: appConfig.adminCredentials.adminEmail,
+      username: appConfig.adminCredentials.adminEmail,
+      password: userPassword,
+      firstname: appConfig.adminCredentials.adminFirstname,
+      lastname: appConfig.adminCredentials.adminLastname,
+      status: "active",
+      role: "Admin",
+      reghash: regHash,
+    };
 
-      models.User.create(data);
+    models.User.create(data);
 
-      console.log("Admin user created!");
-    }
-    
-    return;
+    console.log("Admin user created!");
+  }
+
+  return;
 }
 
 async function cleanUpDB(users) {
-
   const date = new Date();
   const currentDate = date.getTime();
 
-  const filteredData = users.filter(user => {
-    const createdDate = user.createdAt.getTime();
-    const dayDifference = (currentDate - createdDate) / (1000*3600*24);
-    if(user.status === "inactive" && dayDifference > 90) {
-      return user.uuid;
-    }
-    return null;
-  }).map(function(item) {
-    return item.uuid;
-  })
+  const filteredData = users
+    .filter((user) => {
+      const createdDate = user.createdAt.getTime();
+      const dayDifference = (currentDate - createdDate) / (1000 * 3600 * 24);
+      if (user.status === "inactive" && dayDifference > 90) {
+        return user;
+      }
+      return null;
+    })
+    .map(function (item) {
+      return item.uuid;
+    });
 
-  if(filteredData.length > 0) {
-    await models.User.destroy({where: { uuid: filteredData }});
-    console.log(`Database cleaned - ${filteredData.length} account deleted in the process!`);
+  if (filteredData.length > 0) {
+    await models.User.destroy({ where: { uuid: filteredData } });
+    console.log(
+      `Database cleaned - ${filteredData.length} account deleted in the process!`
+    );
     return;
   }
 
-  console.log("Database clean!")
+  console.log("Database clean!");
 }
 
 //Sync Database
 
-(async function(){
-
+(async function () {
   try {
     const syncDB = await models.sequelize.sync();
     const users = await models.User.findAll();
@@ -125,7 +124,6 @@ async function cleanUpDB(users) {
   } catch (error) {
     console.log(error, "Something went wrong with the Database Update!");
   }
-  
 })();
 
 //For JSX
