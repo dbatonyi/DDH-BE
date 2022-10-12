@@ -91,22 +91,25 @@ async function cleanUpDB(users) {
 
   const date = new Date();
   const currentDate = date.getTime();
-  const twoMonthAgo = date.setMonth(date.getMonth() - 2);
 
   const filteredData = users.filter(user => {
-    console.log(user.createdAt)
-    if(user.status === "inactive") {
-      return user;
+    const createdDate = user.createdAt.getTime();
+    const dayDifference = (currentDate - createdDate) / (1000*3600*24);
+    if(user.status === "inactive" && dayDifference > 90) {
+      return user.uuid;
     }
+    return null;
+  }).map(function(item) {
+    return item.uuid;
   })
-  
-  //console.log(filteredData)
 
   if(filteredData.length > 0) {
-    //await filteredData.destroy();
+    await models.User.destroy({where: { uuid: filteredData }});
+    console.log(`Database cleaned - ${filteredData.length} account deleted in the process!`);
+    return;
   }
 
-  console.log("Database cleaned!")
+  console.log("Database clean!")
 }
 
 //Sync Database
