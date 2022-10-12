@@ -50,8 +50,7 @@ const models = require("./models");
 
 //Functions
 
-async function createAdmin() {
-  const users = await models.User.findAll();
+async function createAdmin(users) {
 
     if (users.length < 1) {
       const generateHash = function (password) {
@@ -84,33 +83,47 @@ async function createAdmin() {
 
       console.log("Admin user created!");
     }
-    console.log("Nice! Database looks fine");
+    
     return;
 }
 
-async function cleanUpDB() {
-  const users = await models.User.findAll();
+async function cleanUpDB(users) {
 
-  const getTwoMonthAgoDate = new Date();
+  const date = new Date();
+  const currentDate = date.getTime();
+  const twoMonthAgo = date.setMonth(date.getMonth() - 2);
 
-  if(users.createdAt < getTwoMonthAgoDate && users.status === "inactive") {
-    // delete user
+  const filteredData = users.filter(user => {
+    console.log(user.createdAt)
+    if(user.status === "inactive") {
+      return user;
+    }
+  })
+  
+  //console.log(filteredData)
 
-    return;
+  if(filteredData.length > 0) {
+    //await filteredData.destroy();
   }
 
   console.log("Database cleaned!")
 }
 
 //Sync Database
-models.sequelize
-  .sync()
-  .then(function () {
-    createAdmin();
-  })
-  .catch(function (err) {
-    console.log(err, "Something went wrong with the Database Update!");
-  });
+
+(async function(){
+
+  try {
+    const syncDB = await models.sequelize.sync();
+    const users = await models.User.findAll();
+    createAdmin(users);
+    cleanUpDB(users);
+    console.log("Nice! Database looks fine");
+  } catch (error) {
+    console.log(error, "Something went wrong with the Database Update!");
+  }
+  
+})();
 
 //For JSX
 app.set("views", "./views");
