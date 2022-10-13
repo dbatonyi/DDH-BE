@@ -6,28 +6,29 @@ function profile(props) {
   return (
     <MainLayout title={props.title}>
         <div className="dashboard-container">
-        <Sidebar title={props.title} role={props.role} />
+        <Sidebar role={props.role} />
           <div className="dashboard-container__main">
             {props.systemMessage ? <div className='system-message'>{props.systemMessage}</div> : null}
               <div className="profile-container">
+                    <h1>{props.title}</h1>
+                    <div className='profile-container__item profile-container__firstname'>
                     <label>Firstname:</label>
-                    <div className='profile-container__firstname'>
                       <p>{props.firstname}</p>
                     </div>
+                    <div className='profile-container__item profile-container__lastname'>
                     <label>Lastname:</label>
-                    <div className='profile-container__lastname'>
                       <p>{props.lastname}</p>
                     </div>
+                    <div className='profile-container__item profile-container__email'>
                     <label>Email:</label>
-                    <div className='profile-container__email'>
                       <p>{props.email}</p>
                     </div>
+                    <div className='profile-container__item profile-container__permission'>
                     <label>Role:</label>
-                    <div className='profile-container__permission'>
                       <p>{props.role}</p>
                     </div>
-            <a href='/profile/edit'>Edit profile</a>
-            <a href='/profile/reset-password'>New password</a>
+            <a className='url-btn' href='/profile/edit'>Edit profile</a>
+            <a className='url-btn' href='/profile/reset-password'>New password</a>
               </div>
           </div>
         </div>

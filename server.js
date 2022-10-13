@@ -118,8 +118,8 @@ async function cleanUpDB(users) {
   try {
     const syncDB = await models.sequelize.sync();
     const users = await models.User.findAll();
-    createAdmin(users);
-    cleanUpDB(users);
+    await cleanUpDB(users);
+    await createAdmin(users);
     console.log("Nice! Database looks fine");
   } catch (error) {
     console.log(error, "Something went wrong with the Database Update!");

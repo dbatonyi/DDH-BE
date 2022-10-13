@@ -8,6 +8,7 @@ function MainLayout(props) {
         <link rel="stylesheet" type="text/css" href="/css/base.css" />
         <link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
         <link rel="stylesheet" type="text/css" href="/css/login.css" />
+        <link rel="stylesheet" type="text/css" href="/css/profile.css" />
         <link rel="stylesheet" type="text/css" href="/css/users.css" />
         <script src="/js/sort-n-paginate.js"></script>
       </head>

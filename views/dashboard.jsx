@@ -6,9 +6,11 @@ function dashboard(props) {
   return (
     <MainLayout title={props.title}>
         <div className="dashboard-container">
-            <Sidebar title={props.title} role={props.role} />
+            <Sidebar role={props.role} />
             <div className="dashboard-container__main">
+              <div className='index-container'>
                 <h5>{props.username} successfully logged in!</h5>
+              </div>
             </div>
         </div>
     </MainLayout>
