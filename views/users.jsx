@@ -9,14 +9,15 @@ function users(props) {
   return (
     <MainLayout title={props.title}>
       <div className="dashboard-container">
-        <Sidebar title={props.title} role={props.role} />
+        <Sidebar role={props.role} />
         <div className="dashboard-container__main">
           {props.systemMessage ? (
             <div className="system-message">{props.systemMessage}</div>
           ) : null}
           <div className="users-container">
+          <h1>{props.title}</h1>
             <table
-              className="sortable"
+              className="users-table"
               id="userTable"
               data-size={props.listLength}
             >
@@ -33,17 +34,13 @@ function users(props) {
                     <tr key={i}>
                       <td>{item[1].dataValues.username}</td>
                       <td>{item[1].dataValues.role}</td>
-                      <td>
-                        <button>
-                          <a href={`/user/role/${item[1].dataValues.id}`}>
+                      <td className="table-actions">
+                          <a className="table-btn" href={`/user/role/${item[1].dataValues.id}`}>
                             Role
                           </a>
-                        </button>
-                        <button>
-                          <a href={`/user/delete/${item[1].dataValues.id}`}>
+                          <a className="table-btn" href={`/user/delete/${item[1].dataValues.id}`}>
                             Delete
                           </a>
-                        </button>
                       </td>
                     </tr>
                   );

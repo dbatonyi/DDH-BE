@@ -1,2 +1,62 @@
 // USERS
 
+.users-container {
+
+    .users-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+
+        thead {
+            text-align: left;
+
+            tr {
+                border-bottom: 2px solid black;
+
+                th {
+                    padding: 10px 0;
+
+                    &:first-child {
+                        width: 50%;
+                    }
+
+                    &:last-child {
+                        width: 35%;
+                    }
+                }
+            }
+        }
+
+        tbody {
+
+            tr {
+                padding: 10px 0;
+                border-bottom: 1px solid black;
+
+                &:nth-child(n+2) {
+                    background-color: gainsboro;
+                }
+
+                &:hover {
+                    background-color: #f2f3f3;
+                }
+
+                td {
+                    padding: 10px 0px;
+
+                    &:first-child {
+                        padding-left: 5px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.pagination {
+
+    &__container {
+        display: flex;
+        justify-content: center;
+    }
+}

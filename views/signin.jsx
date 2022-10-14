@@ -28,7 +28,7 @@ function signIn(props) {
                         <input name="password" type="password" />
                     }
                 <div className="login-container__form--submit-btn">
-                    <input className="btn" type="submit" value="Sign In" />
+                    <input className="url-btn" type="submit" value="Sign In" />
                 </div>
             </form>
                 <div className="login-container__sign-up"><p>New User? <a href="/signup">Create new account!</a></p></div>

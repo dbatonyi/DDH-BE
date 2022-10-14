@@ -7,6 +7,7 @@
     &__item {
         display: flex;
         width: 100%;
+        margin: 10px 0;
 
         > * {
             display: flex;
@@ -17,6 +18,22 @@
         label {
             padding-right: 10px;
             font-weight: bold;
+            width: 15%;
+            justify-content: left;
+        }
+
+        input {
+            padding: 5px 10px;
+            width: 80%;
+        }
+
+        p {
+            width: 80%;
+            justify-content: left;
+            display: flex;
+            padding: 5px 10px;
+            background-color: white;
+            margin: 0;
         }
     }
 
@@ -25,28 +42,14 @@
         width: fit-content;
     }
 
-    .url-btn {
-        padding: 10px 20px;
-        margin: 10px 20px 10px 0;
-        background-color: cornflowerblue;
-        color: white;
-        text-transform: uppercase;
-        text-decoration: none;
-        display: block;
-        width: fit-content;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-
     form {
         display: flex;
         flex-wrap: wrap;
 
-
+        &#resetPass {
+            .profile-container__item label {
+                width: 30%;
+            }
+        }
     }
 }

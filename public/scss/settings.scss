@@ -1,0 +1,40 @@
+//Settings
+
+.settings-container {
+
+    &__item {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        margin: 10px 0;
+
+        label {
+            width: 100%;
+            margin: 10px 0;
+            font-size: 17px;
+            font-weight: bold;
+        }
+    }
+
+    &__radio {
+        flex-wrap: nowrap;
+
+        input {
+            margin: 0 10px 0 0;
+        }
+
+        label {
+            width: 35%;
+        }
+    }
+
+    .settings-container__form {
+        display: flex;
+        flex-wrap: wrap;
+
+        &--back-btn,
+        &--submit-btn {
+            width: fit-content !important;
+        }
+    }
+}

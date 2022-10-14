@@ -61,7 +61,7 @@ function editProfile(props) {
                 <a className='url-btn' href="/profile">Back</a>
               </div>
               <div className="profile-container__form--submit-btn">
-                <input className=" url-btn" type="submit" value="Save" />
+                <input className="url-btn" type="submit" value="Save" />
               </div>
             </form>
           </div>

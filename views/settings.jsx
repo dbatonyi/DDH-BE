@@ -6,14 +6,20 @@ function settings(props) {
   return (
     <MainLayout title={props.title}>
         <div className="dashboard-container">
-        <Sidebar title={props.title} role={props.role} />
+        <Sidebar role={props.role} />
           <div className="dashboard-container__main">
             {props.systemMessage ? <div className='system-message'>{props.systemMessage}</div> : null}
               <div className="settings-container">
+              <h1>{props.title}</h1>
+              <div className="settings-container__item settings-container__export">
                     <label>Export database</label>
-            <a href='/export-database'>Export tasks table</a>
-            <label>Import database</label>
-                    <a href='/upload-db'>Import tasks table</a>
+            <a className="url-btn" href='/export-database'>Export tasks table</a>
+            </div>
+            <div className="settings-container__item settings-container__import">
+                <label>Import database</label>
+                <a className="url-btn" href='/upload-db'>Import tasks table</a>
+            </div>
+            
               </div>
           </div>
         </div>

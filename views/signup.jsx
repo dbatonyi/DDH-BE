@@ -39,7 +39,7 @@ function signUp(props) {
                         <input name="repassword" type="password" />
                     }
                     <div className="signup-container__form--submit-btn">
-                        <input className="btn" type="submit" value="Sign Up" />
+                        <input className="url-btn" type="submit" value="Sign Up" />
                     </div>
                 </form>
             </div>
