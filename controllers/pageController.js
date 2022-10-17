@@ -223,6 +223,7 @@ exports.userDelete = async function (req, res) {
   res.render("userDelete", {
     title: "DDH Delete User",
     user: user,
+    role: req.user.role
   });
 };
 

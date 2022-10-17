@@ -10,7 +10,7 @@ function users(props) {
   return (
     <MainLayout title={props.title}>
       <div className="dashboard-container">
-        <Sidebar role={props.role} />
+        <Sidebar path="users" role={props.role} />
         <div className="dashboard-container__main">
           {props.systemMessage ? (
             <div className="system-message">{props.systemMessage}</div>

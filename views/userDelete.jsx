@@ -8,19 +8,19 @@ function userDelete(props) {
   return (
     <MainLayout title={props.title}>
       <div className="dashboard-container">
-        <Sidebar title={props.title} role={props.role} />
+        <Sidebar path="users" title={props.title} role={props.role} />
         <div className="dashboard-container__main">
           {props.systemMessage ? (
             <div className="system-message">{props.systemMessage}</div>
           ) : null}
           <div className="user-delete-container">
-            <div>Are you sure you want to delete {username} user profile?</div>
-            <button>
-              <a href="/users">No</a>
-            </button>
-            <button>
-              <a href={`/remove-user/${uuid}`}>Yes</a>
-            </button>
+            <p>Are you sure you want to delete <strong>{username}</strong> user profile?</p>
+            <div>
+              <a className="url-btn" href="/users">No</a>
+            </div>
+            <div>
+              <a className="url-btn del-btn" href={`/remove-user/${uuid}`}>Yes</a>
+            </div>
           </div>
         </div>
       </div>

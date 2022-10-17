@@ -9,16 +9,16 @@ function userRole(props) {
   return (
     <MainLayout title={props.title}>
       <div className="dashboard-container">
-        <Sidebar title={props.title} role={props.role} />
+        <Sidebar path="users" title={props.title} role={props.role} />
         <div className="dashboard-container__main">
           {props.systemMessage ? (
             <div className="system-message">{props.systemMessage}</div>
           ) : null}
           <div className="user-role-container">
-            <div>
-              {username} current permission: {role}
-            </div>
-            <div>Change permission</div>
+          <h1>Change permission</h1>
+            <p>
+              <strong>{username}</strong> current permission: <strong>{role}</strong>
+            </p>
             <form
               className="user-role-container__form"
               id="userRole"
@@ -26,6 +26,7 @@ function userRole(props) {
               method="post"
               action={`/user/edit-role/${id}`}
             >
+              <div className="user-role-container__item user-role-container__role">
               <label htmlFor="newRole">Choose permission:</label>
               <select name="newRole" id="newRole" defaultValue="" required>
                 <option value="" disabled>
@@ -40,11 +41,12 @@ function userRole(props) {
                 <option value="Editor">Editor</option>
                 <option value="User">User</option>
               </select>
+              </div>
               <div className="user-role-container__form--back-btn">
-                <a href="/users">Back</a>
+                <a className="url-btn" href="/users">Back</a>
               </div>
               <div className="user-role-container__form--submit-btn">
-                <input className="btn" type="submit" value="Save" />
+                <input className="url-btn" type="submit" value="Save" />
               </div>
             </form>
           </div>

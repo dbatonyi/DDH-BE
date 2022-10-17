@@ -24,4 +24,12 @@ h1 {
   &:hover {
       text-decoration: underline;
   }
+
+  &.del-btn {
+    background-color: red;
+  }
+}
+
+.active-link {
+  font-weight: bold;
 }
