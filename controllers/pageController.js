@@ -166,7 +166,7 @@ exports.users = async function (req, res) {
     title: "DDH Users",
     users: paginatedUserList,
     listLength,
-    page,
+    page: Number(page),
     role: req.user.role,
   });
 };

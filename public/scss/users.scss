@@ -25,6 +25,10 @@
                     }
                 }
             }
+
+            .order-by {
+                cursor: pointer;
+            }
         }
 
         tbody {
@@ -33,12 +37,8 @@
                 padding: 10px 0;
                 border-bottom: 1px solid black;
 
-                &:nth-child(n+2) {
-                    background-color: gainsboro;
-                }
-
-                &:hover {
-                    background-color: #f2f3f3;
+                &:nth-child(even) {
+                    background-color: #8cd3ff;
                 }
 
                 td {
@@ -54,9 +54,39 @@
 }
 
 .pagination {
+    display: flex;
+    justify-content: center;
+    position: relative;
 
     &__container {
         display: flex;
         justify-content: center;
+        margin: auto 55px;
+
+        &--number {
+            padding: 2px 5px;
+            cursor: pointer;
+            margin: auto 5px;
+            border: 1px solid;
+
+            &.pag-active {
+                font-weight: bold;
+            }
+        }
+    }
+
+    &--prev,
+    &--next {
+        position: absolute;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    &--prev {
+        left: 0;
+    }
+
+    &--next {
+        right: 0;
     }
 }

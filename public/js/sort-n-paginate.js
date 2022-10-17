@@ -93,6 +93,14 @@ window.addEventListener("load", function () {
       getAllPaginationNumber.forEach((element) => {
         const getPageNumber = element.getAttribute("page-number");
 
+        if(getPageNumber === page) {
+          element.classList.add("pag-active");
+        }
+
+        if(!page && getPageNumber === "1") {
+          element.classList.add("pag-active");
+        }
+
         element.addEventListener("click", pageNumber);
 
         async function pageNumber() {

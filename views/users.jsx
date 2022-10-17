@@ -5,6 +5,7 @@ const Sidebar = require("./partials/sidebar");
 function users(props) {
   const usersData = props.users;
   const page = props.page;
+  const listLength = Math.ceil(props.listLength);
 
   return (
     <MainLayout title={props.title}>
@@ -19,7 +20,7 @@ function users(props) {
             <table
               className="users-table"
               id="userTable"
-              data-size={props.listLength}
+              data-size={listLength}
             >
               <thead>
                 <tr>
@@ -52,8 +53,8 @@ function users(props) {
                 <div className="pagination--prev">Prev</div>
               ) : null}
               <div className="pagination__container">
-                {props.listLength > 1 ? (
-                  [...Array(props.listLength)].map((x, i) => (
+                {listLength > 1 ? (
+                  [...Array(listLength)].map((x, i) => (
                     <div
                       key={i + 1}
                       page-number={i + 1}
@@ -66,13 +67,13 @@ function users(props) {
                   <div
                     key={1}
                     page-number={1}
-                    className="pagination__container--number--disabled"
+                    className="pagination__container--number--disabled pag-active"
                   >
                     1
                   </div>
                 )}
               </div>
-              {page < props.listLength ? (
+              {page < listLength ? (
                 <div className="pagination--next">Next</div>
               ) : null}
             </div>
