@@ -107,7 +107,7 @@ module.exports = function (passport, User) {
         if (req.body.password === req.body.repassword) {
           createNewUser(data);
         } else {
-          req.flash("errorMessage", "Password not match!");
+          req.flash("errorPassMessage", "Password not match!");
           return done(null, false);
         }
       }

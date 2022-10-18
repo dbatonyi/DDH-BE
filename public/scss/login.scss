@@ -158,8 +158,11 @@
 
     &--submit-btn {
       width: 100%;
+      display: flex;
+      justify-content: center;
 
       input {
+        margin: 10px 0;
         max-width: fit-content;
         padding: 5px 20px;
       }

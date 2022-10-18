@@ -2,7 +2,7 @@ const React = require('react');
  
 const Sidebar = (props) => (
         <div className="dashboard-container__sidebar">
-            <a href='/dashboard'><h2>DDH Dashboard</h2></a>
+            <a className='home-btn' href='/dashboard'><h2>DDH Dashboard</h2></a>
             <div className="dashboard-menu">
                 <ul className="menu">
                 <li className={props.path === "profile" ? "menu-item active-link" : "menu-item"}><a href="/profile">Profile</a><div className='decor-line'></div></li>

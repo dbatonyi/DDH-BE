@@ -3,13 +3,13 @@ const appConfig = require("../app-config.json")["variables"];
 var exports = (module.exports = {});
 
 exports.signup = function (req, res) {
-  const successMessage = req.flash("successMessage");
   const errorMessage = req.flash("errorMessage");
+  const errorPassMessage = req.flash("errorPassMessage");
 
   res.render("signup", {
     title: "DDH Signup",
-    successMessage: successMessage[0],
     errMessage: errorMessage[0],
+    errPassMessage: errorPassMessage[0]
   });
 };
 
