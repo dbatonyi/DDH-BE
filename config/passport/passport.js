@@ -84,7 +84,7 @@ module.exports = function (passport, User) {
         const user = await User.findOne({ where: { email: email } });
 
         if (user) {
-          req.flash("errorMessageEmail", "Email address already exists.");
+          req.flash("errorMessage", "Email address already exists.");
           return done(null, false);
         }
 
@@ -107,7 +107,7 @@ module.exports = function (passport, User) {
         if (req.body.password === req.body.repassword) {
           createNewUser(data);
         } else {
-          req.flash("errorMessagePass", "Password not match!");
+          req.flash("errorMessage", "Password not match!");
           return done(null, false);
         }
       }
@@ -133,22 +133,22 @@ module.exports = function (passport, User) {
         const user = await User.findOne({ where: { email: email } });
 
         if (!user) {
-          req.flash("errorMessageEmail", "Wrong email address.");
+          req.flash("errorMessage", "Incorrect email address or/and password!");
           return done(null, false);
         }
 
         if (!isValidPassword(user.password, password)) {
-          req.flash("errorMessagePass", "Incorrect password.");
+          req.flash("errorMessage", "Incorrect email address or/and password!");
           return done(null, false);
         }
 
         if (!["Admin", "Developer"].includes(user.role)) {
-          req.flash("errorMessagePass", "Access denied!");
+          req.flash("errorMessage", "Access denied!");
           return done(null, false);
         }
 
         if (user.status === "inactive") {
-          req.flash("errorMessageEmail", "Please activate your account first!");
+          req.flash("errorMessage", "Please activate your account first!");
           return done(null, false);
         }
 
