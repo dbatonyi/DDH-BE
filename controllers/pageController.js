@@ -199,14 +199,19 @@ exports.userEditRoleHandler = async function (req, res) {
   const userId = req.params.id;
   const role = req.body.newRole;
 
-  const user = await User.update(
+  const user = await User.findOne({
+    attributes: ["id", "username", "role"],
+    where: { id: userId },
+  });
+
+  user.update(
     {
       role,
     },
     { where: { id: userId } }
   );
 
-  req.flash("systemMessage", `User's role updated!`);
+  req.flash("systemMessage", `${user.username}'s role updated!`);
 
   res.redirect("/users");
   return;

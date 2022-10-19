@@ -490,6 +490,13 @@ exports.apiTaskManagerForm = async function (req, res) {
     console.log("Unique checklist item created");
   }
 
+  // Check API Token
+  const authenticateToken = req.header.authentication;
+
+  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+    return res.send({ message: "API token not valid!" });
+  }
+
   // Start the function
   generateTrelloTask();
 

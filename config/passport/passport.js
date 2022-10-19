@@ -142,11 +142,6 @@ module.exports = function (passport, User) {
           return done(null, false);
         }
 
-        if (!["Admin", "Developer"].includes(user.role)) {
-          req.flash("errorMessage", "Access denied!");
-          return done(null, false);
-        }
-
         if (user.status === "inactive") {
           req.flash("errorMessage", "Please activate your account first!");
           return done(null, false);

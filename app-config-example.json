@@ -5,6 +5,7 @@
         "smtpEmail": "smtpemail@yahoo.com",
         "smtpPassword": "smptpassword",
         "jwtkey": "secretkey",
+        "apiToken": "apitoken",
         "trelloApiKey": "apikey",
         "trelloApiToken": "apitoken",
         "trelloBoardName": "DDH Project",

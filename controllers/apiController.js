@@ -306,6 +306,12 @@ exports.apiNewTask = async function (req, res) {
     taskDescription,
   } = req.body;
 
+  const authenticateToken = req.header.authentication;
+
+  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+    return res.send({ message: "API token not valid!" });
+  }
+
   try {
     const user = await User.findOne({ where: { uuid: userUuid } });
 
@@ -328,6 +334,12 @@ exports.apiNewTask = async function (req, res) {
 exports.apiTaskList = async function (req, res) {
   const { User, Task } = require("../models");
 
+  const authenticateToken = req.header.authentication;
+
+  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+    return res.send({ message: "API token not valid!" });
+  }
+
   try {
     const tasks = await Task.findAll({
       attributes: ["id", "title", "taskCategory", "createdAt", "updatedAt"],
@@ -347,6 +359,12 @@ exports.apiTask = async function (req, res) {
   var taskId = req.params.id;
 
   const { User, Task } = require("../models");
+
+  const authenticateToken = req.header.authentication;
+
+  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+    return res.send({ message: "API token not valid!" });
+  }
 
   try {
     const task = await Task.findOne({
@@ -376,6 +394,12 @@ exports.apiDeleteTask = async function (req, res) {
 
   const { Task } = require("../models");
 
+  const authenticateToken = req.header.authentication;
+
+  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+    return res.send({ message: "API token not valid!" });
+  }
+
   try {
     const task = await Task.findOne({
       where: { id: taskId },
@@ -394,6 +418,12 @@ exports.apiEditTask = async function (req, res) {
   var taskId = req.params.id;
 
   const { Task } = require("../models");
+
+  const authenticateToken = req.header.authentication;
+
+  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+    return res.send({ message: "API token not valid!" });
+  }
 
   const {
     title,

@@ -1,6 +1,7 @@
 const React = require('react');
 const MainLayout = require('./layouts/mainLayout');
 const Sidebar = require('./partials/sidebar');
+const appConfig = require("../app-config.json")["variables"];
  
 function settings(props) {
   return (
@@ -18,6 +19,10 @@ function settings(props) {
             <div className="settings-container__item settings-container__import">
                 <label>Import database</label>
                 <a className="url-btn" href='/upload-db'>Import tasks table</a>
+            </div>
+            <div className="settings-container__item settings-container__api-token">
+                <label>API Token:</label>
+                <p className='api-token'>Bearer {appConfig.apiToken}</p>
             </div>
             
               </div>

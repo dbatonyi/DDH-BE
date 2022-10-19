@@ -36,6 +36,12 @@ module.exports = function (app, passport) {
     res.redirect("/dashboard");
   }
 
+  function permissionLevelDeveloper(req, res, next) {
+    if (["Admin", "Developer"].includes(req.user.role)) return next();
+
+    res.redirect("/dashboard");
+  }
+
   //Auth
 
   app.get("/signup", authController.signup);
@@ -66,19 +72,20 @@ module.exports = function (app, passport) {
     pageController.resetPassHandler
   );
 
-  app.get("/users", isLoggedIn, pageController.users);
+  app.get("/users", isLoggedIn, permissionLevelDeveloper, pageController.users);
 
-  app.get("/user/role/:id", isLoggedIn, pageController.userRole);
+  app.get("/user/role/:id", isLoggedIn, permissionLevelDeveloper, pageController.userRole);
 
   app.post(
     "/user/edit-role/:id",
     isLoggedIn,
+    permissionLevelDeveloper,
     pageController.userEditRoleHandler
   );
 
-  app.get("/user/delete/:id", isLoggedIn, pageController.userDelete);
+  app.get("/user/delete/:id", isLoggedIn, permissionLevelDeveloper, pageController.userDelete);
 
-  app.get("/remove-user/:id", isLoggedIn, pageController.userDeleteHandler);
+  app.get("/remove-user/:id", isLoggedIn, permissionLevelDeveloper, pageController.userDeleteHandler);
 
   app.get(
     "/settings",
