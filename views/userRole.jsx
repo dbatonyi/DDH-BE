@@ -11,9 +11,6 @@ function userRole(props) {
       <div className="dashboard-container">
         <Sidebar path="users" title={props.title} role={props.role} />
         <div className="dashboard-container__main">
-          {props.systemMessage ? (
-            <div className="system-message">{props.systemMessage}</div>
-          ) : null}
           <div className="user-role-container">
           <h1>Change permission</h1>
             <p>

@@ -21,6 +21,7 @@ exports.dashboard = function (req, res) {
 
 exports.profile = function (req, res) {
   const { firstname, lastname, email, role } = req.user;
+  const systemMessage = req.flash("systemMessage");
 
   res.render("profile", {
     title: "DDH User Profile",
@@ -28,6 +29,7 @@ exports.profile = function (req, res) {
     lastname,
     email,
     role,
+    systemMessage
   });
 };
 
@@ -76,7 +78,7 @@ exports.profileEditHandler = async function (req, res) {
 
   req.flash("systemMessage", "Profile saved!");
 
-  res.redirect("/profile/edit");
+  res.redirect("/profile");
   return;
 };
 
@@ -162,19 +164,20 @@ exports.users = async function (req, res) {
 
   const listLength = users.length / pageSize;
 
+  const systemMessage = req.flash("systemMessage");
+
   res.render("users", {
     title: "DDH Users",
     users: paginatedUserList,
     listLength,
     page: Number(page),
     role: req.user.role,
+    systemMessage
   });
 };
 
 exports.userRole = async function (req, res) {
   const { User } = require("../models");
-
-  const systemMessage = req.flash("systemMessage");
 
   const userId = req.params.id;
 
@@ -186,8 +189,7 @@ exports.userRole = async function (req, res) {
   res.render("userRole", {
     title: "DDH User Role",
     user: user,
-    role: req.user.role,
-    systemMessage,
+    role: req.user.role
   });
 };
 
@@ -204,7 +206,7 @@ exports.userEditRoleHandler = async function (req, res) {
     { where: { id: userId } }
   );
 
-  req.flash("systemMessage", `${user.username} role updated!`);
+  req.flash("systemMessage", `User's role updated!`);
 
   res.redirect("/users");
   return;
@@ -235,14 +237,17 @@ exports.userDeleteHandler = async function (req, res) {
   const user = await User.findOne({ where: { uuid: userUuid } });
 
   if (user) {
-    await user.destroy();
 
     if (userUuid === req.user.uuid) {
+      await user.destroy();
+
       req.session.destroy(function (err) {
         res.redirect("/");
       });
     } else {
-      req.flash("systemMessage", `${user.username} deleted!`);
+      req.flash("systemMessage", `${user.username}'s user deleted!`);
+
+      await user.destroy();
 
       res.redirect("/users");
       return;
@@ -334,9 +339,9 @@ exports.uploadDatabaseHandler = async function (req, res) {
               }
             });
 
-            req.flash("systemMessage", "Database updated");
+            req.flash("systemMessage", "Database updated!");
 
-            res.redirect("/upload-db");
+            res.redirect("/settings");
             return;
           })
           .catch((error) => {

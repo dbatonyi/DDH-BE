@@ -8,7 +8,7 @@ function resetPass(props) {
         <div className="dashboard-container">
         <Sidebar path="profile" role={props.role} />
           <div className="dashboard-container__main">
-            {props.systemMessage ? <div className='system-message'>{props.systemMessage}</div> : null}
+            {props.systemMessage && props.systemMessage[0] ? <div className='system-message'>{props.systemMessage}</div> : null}
                 <div className="profile-container">
                 <h1>{props.title}</h1>
                       <form className="profile-edit-container__form" id="resetPass" name="resetPass" method="post" action="/profile/reset-password">     

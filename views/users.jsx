@@ -12,7 +12,7 @@ function users(props) {
       <div className="dashboard-container">
         <Sidebar path="users" role={props.role} />
         <div className="dashboard-container__main">
-          {props.systemMessage ? (
+          {props.systemMessage && props.systemMessage[0] ? (
             <div className="system-message">{props.systemMessage}</div>
           ) : null}
           <div className="users-container">

@@ -10,9 +10,6 @@ function userDelete(props) {
       <div className="dashboard-container">
         <Sidebar path="users" title={props.title} role={props.role} />
         <div className="dashboard-container__main">
-          {props.systemMessage ? (
-            <div className="system-message">{props.systemMessage}</div>
-          ) : null}
           <div className="user-delete-container">
             <p>Are you sure you want to delete <strong>{username}</strong> user profile?</p>
             <div>
