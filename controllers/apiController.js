@@ -306,9 +306,9 @@ exports.apiNewTask = async function (req, res) {
     taskDescription,
   } = req.body;
 
-  const authenticateToken = req.header.authentication;
+  const authenticateToken = req.headers['authenticate'];
 
-  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+  if(!authenticateToken || appConfig.apiToken !== authenticateToken.slice(7)) {
     return res.send({ message: "API token not valid!" });
   }
 
@@ -334,9 +334,9 @@ exports.apiNewTask = async function (req, res) {
 exports.apiTaskList = async function (req, res) {
   const { User, Task } = require("../models");
 
-  const authenticateToken = req.header.authentication;
+  const authenticateToken = req.headers['authenticate'];
 
-  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+  if(!authenticateToken || appConfig.apiToken !== authenticateToken.slice(7)) {
     return res.send({ message: "API token not valid!" });
   }
 
@@ -360,9 +360,9 @@ exports.apiTask = async function (req, res) {
 
   const { User, Task } = require("../models");
 
-  const authenticateToken = req.header.authentication;
+  const authenticateToken = req.headers['authenticate'];
 
-  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+  if(!authenticateToken || appConfig.apiToken !== authenticateToken.slice(7)) {
     return res.send({ message: "API token not valid!" });
   }
 
@@ -394,9 +394,9 @@ exports.apiDeleteTask = async function (req, res) {
 
   const { Task } = require("../models");
 
-  const authenticateToken = req.header.authentication;
+  const authenticateToken = req.headers['authenticate'];
 
-  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+  if(!authenticateToken || appConfig.apiToken !== authenticateToken.slice(7)) {
     return res.send({ message: "API token not valid!" });
   }
 
@@ -419,9 +419,9 @@ exports.apiEditTask = async function (req, res) {
 
   const { Task } = require("../models");
 
-  const authenticateToken = req.header.authentication;
+  const authenticateToken = req.headers['authenticate'];
 
-  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+  if(!authenticateToken || appConfig.apiToken !== authenticateToken.slice(7)) {
     return res.send({ message: "API token not valid!" });
   }
 
