@@ -342,7 +342,7 @@ exports.apiTaskList = async function (req, res) {
 
   try {
     const tasks = await Task.findAll({
-      attributes: ["id", "title", "taskCategory", "createdAt", "updatedAt"],
+      attributes: ["id", "uuid", "title", "taskCategory", "createdAt", "updatedAt"],
       include: [
         { model: User, as: "user", attributes: ["firstname", "lastname"] },
       ],
@@ -371,6 +371,7 @@ exports.apiTask = async function (req, res) {
       where: { id: taskId },
       attributes: [
         "id",
+        "uuid",
         "title",
         "taskCategory",
         "taskTags",
@@ -390,7 +391,7 @@ exports.apiTask = async function (req, res) {
 };
 
 exports.apiDeleteTask = async function (req, res) {
-  var taskId = req.params.id;
+  var taskUuid = req.params.id;
 
   const { Task } = require("../models");
 
@@ -402,7 +403,7 @@ exports.apiDeleteTask = async function (req, res) {
 
   try {
     const task = await Task.findOne({
-      where: { id: taskId },
+      where: { uuid: taskUuid },
     });
 
     await task.destroy();

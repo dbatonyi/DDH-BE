@@ -171,6 +171,7 @@ exports.users = async function (req, res) {
     users: paginatedUserList,
     listLength,
     page: Number(page),
+    sort: sort ? sort : "asc",
     role: req.user.role,
     systemMessage
   });

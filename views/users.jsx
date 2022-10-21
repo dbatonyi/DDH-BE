@@ -5,6 +5,7 @@ const Sidebar = require("./partials/sidebar");
 function users(props) {
   const usersData = props.users;
   const page = props.page;
+  const sort = props.sort;
   const listLength = Math.ceil(props.listLength);
 
   return (
@@ -24,7 +25,7 @@ function users(props) {
             >
               <thead>
                 <tr>
-                  <th className="order-by">User</th>
+                  <th className={`order-by ${sort}`}>User</th>
                   <th className="sorttable_nosort">Role</th>
                   <th className="sorttable_nosort">Actions</th>
                 </tr>
