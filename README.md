@@ -1,7 +1,9 @@
 # Drupal Development Helper - BE (DDH) Documentation
 
 **Author:** dbatonyi
+
 **Stack:** Node.js
+
 **Main modules:** Sequlize (ORM), Express/Axios (API), Passport/bcrypt-nodejs/JWT (Authentication), Multer (File handleing), Nodemailer (Email handleing)
 
 ## Short description:
