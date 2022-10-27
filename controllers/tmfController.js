@@ -472,7 +472,7 @@ exports.apiTaskManagerForm = async function (req, res) {
     const checklistItem = await axios.post(
       `https://api.trello.com/1/checklists/${getChecklistId}/checkItems?key=${appConfig.trelloApiKey}&token=${appConfig.trelloApiToken}`,
       {
-        name: `${data.taskShort} --- ${appConfig.frontendUrl}/task/${data.id}`,
+        name: `${data.taskShort} -- ${data.taskCategory} --- ${appConfig.frontendUrl}/task/${data.id}`,
       }
     );
 
@@ -491,9 +491,9 @@ exports.apiTaskManagerForm = async function (req, res) {
   }
 
   // Check API Token
-  const authenticateToken = req.header.authentication;
+  const authenticateToken = req.headers['authenticate'];
 
-  if(appConfig.apiToken !== authenticateToken.slice(7)) {
+  if(!authenticateToken || appConfig.apiToken !== authenticateToken.slice(7)) {
     return res.send({ message: "API token not valid!" });
   }
 
