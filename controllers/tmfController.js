@@ -215,7 +215,7 @@ exports.apiTaskManagerForm = async function (req, res) {
         await createChecklistItem(
           getChecklistId,
           allTaskData,
-          "Install drupal"
+          "Install Drupal"
         );
         break;
       case "Basic Package":
